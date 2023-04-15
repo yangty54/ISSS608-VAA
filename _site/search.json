@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
+    "title": "Hands-on Exercise 1",
+    "section": "",
+    "text": "Plotting a simple bar chart\n\nggplot(data = exam_data,\n       aes(x = RACE)) + \n  geom_bar()"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "ISSS608-VAA",
+    "section": "",
+    "text": "Welcome to ISSS608 Visual Analytics and Applications homepage. In this website, you will find my coursework"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "1 + 1\n\n[1] 2"
+  }
+]

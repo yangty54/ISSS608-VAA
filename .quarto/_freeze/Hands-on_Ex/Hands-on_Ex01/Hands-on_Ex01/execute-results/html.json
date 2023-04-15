@@ -1,0 +1,16 @@
+{
+  "hash": "23dc96683ed442d41ae3889560a1cf82",
+  "result": {
+    "markdown": "---\ntitle: \"Hands-on Exercise 1\"\nauthor: \"Yang Tianyi\"\neditor: visual\n---\n\n\n# Getting Started \n\n## Install and launching R packages\n\nThe code chunk below uses p_load() of pacman package to check if tidyverse has been installed in the computer. If they are, then they will be launched into R.\n\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(tidyverse) \n```\n:::\n\n\n## Importing the data\n\n\n::: {.cell}\n\n```{.r .cell-code}\nexam_data <- read_csv(\"data/Exam_data.csv\")\n```\n\n::: {.cell-output .cell-output-stderr}\n```\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n```\n:::\n:::\n\n\n# Plotting a simple bar chart\n\n\n::: {.cell}\n\n```{.r .cell-code}\nggplot(data = exam_data,\n       aes(x = RACE)) + \n  geom_bar()\n```\n\n::: {.cell-output-display}\n![](Hands-on_Ex01_files/figure-html/unnamed-chunk-3-1.png){width=672}\n:::\n:::\n",
+    "supporting": [
+      "Hands-on_Ex01_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
