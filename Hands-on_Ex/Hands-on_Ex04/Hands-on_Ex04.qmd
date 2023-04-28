@@ -2,6 +2,11 @@
 title: "Hands-on Exercise 4"
 author: "Yang Tianyi"
 editor: visual
+format: html
+execute: 
+  echo: true
+  eval: true
+  warning: false
 ---
 
 ## Overview
