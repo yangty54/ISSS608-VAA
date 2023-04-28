@@ -125,7 +125,6 @@ ggplotly(gg) \`\`\`
 In this sub-section, you will learn how to create an animated bubble plot by using `plot_ly()` method.
 
 ```{r}
-#| eval: false
 bp <- globalPop %>%
   plot_ly(x = ~Old, 
           y = ~Young, 
