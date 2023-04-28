@@ -116,7 +116,7 @@ In **Plotly R** package, both `ggplotly()` and `plot_ly()` support key frame ani
 
 In this sub-section, you will learn how to create an animated bubble plot by using `ggplotly()` method.
 
-```{r}
+```{r}#| eval: false}
 gg <- ggplot(globalPop, 
        aes(x = Old, 
            y = Young, 
@@ -138,6 +138,7 @@ ggplotly(gg)
 
 In this sub-section, you will learn how to create an animated bubble plot by using `plot_ly()` method.
 
+
 ```{r}
 bp <- suppressMessages({
   globalPop %>%
@@ -154,5 +155,4 @@ bp <- suppressMessages({
 })
 
 bp
-
 ```
