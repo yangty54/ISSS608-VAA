@@ -1,5 +1,0 @@
----
-title: "In-class Exercise 2"
-author: "Yang Tianyi"
-editor: visual
----
