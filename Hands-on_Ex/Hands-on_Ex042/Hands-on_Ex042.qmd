@@ -14,7 +14,7 @@ editor: visual
 
 -   Important:
 
-    -   Don\'t confuse the uncertainty of a point estimate with the variation in the sample
+    -   Don't confuse the uncertainty of a point estimate with the variation in the sample
 
 ```{r}
 pacman::p_load(tidyverse, plotly, crosstalk, DT, ggdist, gganimate, dplyr, ggplot2)
@@ -118,7 +118,7 @@ ggplot(my_sum, aes(x = mean, y = reorder(RACE, mean), xmin = lower, xmax = upper
 
 -   It is designed for both frequentist and Bayesian uncertainty visualization, taking the view that uncertainty visualization can be unified through the perspective of distribution visualization:
 
-    -   for frequentist models, one visualises confidence distributions or bootstrap distributions (see vignette(\"freq-uncertainty-vis\"));
+    -   for frequentist models, one visualises confidence distributions or bootstrap distributions (see vignette("freq-uncertainty-vis"));
 
     -   for Bayesian models, one visualises probability distributions (see the tidybayes package, which builds on top of ggdist).
 

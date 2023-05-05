@@ -54,7 +54,7 @@ Default information: - statistical details - Bayes Factor - sample sizes - distr
 
 -   A Bayes factor is the ratio of the likelihood of one particular hypothesis to the likelihood of another. It can be interpreted as a measure of the strength of evidence in favor of one theory among two competing theories.
 
--   That\'s because the Bayes factor gives us a way to evaluate the data in favor of a null hypothesis, and to use external information to do so. It tells us what the weight of the evidence is in favor of a given hypothesis.
+-   That's because the Bayes factor gives us a way to evaluate the data in favor of a null hypothesis, and to use external information to do so. It tells us what the weight of the evidence is in favor of a given hypothesis.
 
 -   When we are comparing two hypotheses, H1 (the alternate hypothesis) and H0 (the null hypothesis), the Bayes Factor is often written as B10. It can be defined mathematically as
 
@@ -102,11 +102,11 @@ ggbetweenstats(
 )
 ```
 
--   \"ns\" → only non-significant
+-   "ns" → only non-significant
 
--   \"s\" → only significant
+-   "s" → only significant
 
--   \"all\" → everything
+-   "all" → everything
 
 #### ggbetweenstats - Summary of tests
 
