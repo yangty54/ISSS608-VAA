@@ -1,0 +1,77 @@
+---
+title: "In-Class Exercise 4"
+author: "Yang Tianyi"
+editor: visual
+execute: 
+  echo: true
+  eval: true
+  warning: false
+---
+
+```{r}
+pacman::p_load(rstatix, gt, patchwork, tidyverse, webshot2, ggstatsplot)
+```
+
+```{r}
+exam_data <- read_csv("data/Exam_data.csv")
+```
+
+
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAaCAYAAADFTB7LAAAAcElEQVR4Xu3OwQmAQAxE0bClWYCW5N06tM6V2YPg5CjoF/JhLoHAi6iqn9eOefUbqrYvHY0cQDLyAlKRNyARmYA0ZMLRkAlGQyaU72tkAtlim7r/vJqDUDjlKBROOQyFU2icQuMUGqfQuBEaV1XPOwEx96nYACK8+wAAAABJRU5ErkJggg== "Run Current Chunk")
+
+
+```{r}
+ggplot(exam_data,
+       aes(sample=ENGLISH))+
+  stat_qq() +
+  stat_qq_line()
+```
+
+
+::: callout-note
+We can see that the points deviate significantly from the straight diagonal line. This is a clear indication that the set of data is not normally distributed.
+:::
+
+
+```{r}
+qq <- ggplot(exam_data,
+       aes(sample=ENGLISH))+
+  stat_qq() +
+  stat_qq_line()
+```
+
+```{r}
+sw_t <- exam_data %>%
+  shapiro_test(ENGLISH) %>%
+  gt()
+```
+
+```{r}
+tmp <- tempfile(fileext = '.png')
+gtsave(sw_t, tmp)
+table_png <- png::readPNG(tmp, native = TRUE)
+qq + table_png
+```
+
+```{r}
+set.seed(1234)
+
+gghistostats(
+  data = exam_data,
+  x = ENGLISH,
+  type = "bayes",
+  test.value = 60,
+  vlab = "English scores"
+)
+```
+
+```{r}
+gghistostats(
+  data = exam_data,
+  x = ENGLISH,
+  type = "p",
+  test.value = 60,
+  vlab = "English scores"
+)
+```
+

@@ -2,6 +2,10 @@
 title: "Hands-on Exercise 4.2"
 author: "Yang Tianyi"
 editor: visual
+execute: 
+  echo: true
+  eval: true
+  warning: false
 ---
 
 # Visualising Uncertainty

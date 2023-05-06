@@ -1,0 +1,5 @@
+---
+title: "Take-Home Exercise 1"
+author: "Yang Tianyi"
+editor: visual
+---
