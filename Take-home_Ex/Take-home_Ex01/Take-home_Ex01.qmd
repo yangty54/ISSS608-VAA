@@ -1,5 +1,236 @@
 ---
-title: "Take-Home Exercise 1"
-author: "Yang Tianyi"
+title: "Unveiling Demographic and Financial Characteristics of City of Engagement: A Data-driven Study"
+subtitle: "Take-home Ex1"
 editor: visual
+author: Yang Tianyi
+execute: 
+  warning: false
+  message: false
+format: html
 ---
+
+# Setting the Scene
+
+City of Engagement, with a total population of 50,000, is a small city located at Country of Nowhere. The city serves as a service centre of an agriculture region surrounding the city. The main agriculture of the region is fruit farms and vineyards. The local council of the city is in the process of preparing the Local Plan 2023. A sample survey of 1000 representative residents had been conducted to collect data related to their household demographic and spending patterns, among other things. The city aims to use the data to assist with their major community revitalization efforts, including how to allocate a very large city renewal grant they have recently received.
+
+# Getting Started
+
+In the code chunk below, `p_load()` of *pacman* package is used to install and load the following R packages into R environment:
+
+-   tidyverse,
+
+-   lubridate,
+
+-   stringr,
+
+-   ggplot2,
+
+-   knitr,
+
+-   dplyr,
+
+-   gridExtra
+
+```{r}
+pacman::p_load(tidyverse, lubridate, stringr, ggplot2, knitr, dplyr, gridExtra)
+```
+
+# **The Data**
+
+For the purpose of this study, two data sets are provided. They are:
+
+*Participants.csv*
+
+Contains information about the residents of City of Engagement that have agreed to participate in this study.
+
+-   participantId (integer): unique ID assigned to each participant.
+
+-   householdSize (integer): the number of people in the participant\'s household
+
+-   haveKids (boolean): whether there are children living in the participant\'s household.
+
+-   age (integer): participant\'s age in years at the start of the study.
+
+-   educationLevel (string factor): the participant\'s education level, one of: {\"Low\", \"HighSchoolOrCollege\", \"Bachelors\", \"Graduate\"}
+
+-   interestGroup (char): a char representing the participant\'s stated primary interest group, one of {\"A\", \"B\", \"C\", \"D\", \"E\", \"F\", \"G\", \"H\", \"I\", \"J\"}. Note: specific topics of interest have been redacted to avoid bias.
+
+-   joviality (float): a value ranging from \[0,1\] indicating the participant\'s overall happiness level at the start of the study.
+
+*FinancialJournal.csv*
+
+Contains information about financial transactions.
+
+-   participantId (integer): unique ID corresponding to the participant affected
+
+-   timestamp (datetime): the time when the check-in was logged
+
+-   category (string factor): a string describing the expense category, one of {\"Education\", \"Food\", \"Recreation\", \"RentAdjustment\", \"Shelter\", \"Wage\"}
+
+-   amount (double): the amount of the transaction
+
+```{r}
+Journal <- read_csv("data/FinancialJournal.csv")
+```
+
+```{r}
+participants <- read_csv("data/Participants.csv")
+```
+
+## Data Cleaning
+
+First, we will have to start with missing value check on both datasets.
+
+```{r}
+# Missing value check for financial_journal dataset
+missing_values_fj <- sapply(Journal, function(x) sum(is.na(x)))
+print(missing_values_fj)
+
+# Missing value check for participants dataset
+missing_values_participants <- sapply(participants, function(x) sum(is.na(x)))
+print(missing_values_participants)
+
+```
+
+Seems no missing value appears in the dataset, we them move on to the next part.
+
+Next part is checking for duplicate participant IDs: Ensure that each participant ID is unique and there are no duplicates. I use the **`duplicated()`** function to identify and remove any duplicate rows.
+
+```{r}
+# Checking for duplicate participant IDs
+duplicate_ids <- participants[duplicated(participants$participantId), "participantId"]
+if (length(duplicate_ids) > 0) {
+  print(paste("Duplicate participant IDs found:", paste(duplicate_ids, collapse = ", ")))
+} else {
+  print("No duplicate participant IDs found.")
+}
+```
+
+Next, I will perform categorical variable standardization, the levels of categorical variables like "educationLevel" or "interestGroup" might inconsistent capitalization or spelling, I decided to use functions like **`tolower()`** or **`recode()`** from the **`dplyr`** to standarde them for consistency and easier analysis.
+
+```{r}
+library(dplyr)
+
+# Standardizing the educationLevel variable
+participants <- participants %>%
+  mutate(educationLevel = recode(educationLevel,
+                                 "Low" = "Low",
+                                 "HighSchoolOrCollege" = "High School or College",
+                                 "Bachelors" = "Bachelors",
+                                 "Graduate" = "Graduate"))
+
+# Standardizing the interestGroup variable
+participants <- participants %>%
+  mutate(interestGroup = recode(interestGroup,
+                                "A" = "Group A",
+                                "B" = "Group B",
+                                "C" = "Group C",
+                                "D" = "Group D",
+                                "E" = "Group E",
+                                "F" = "Group F",
+                                "G" = "Group G",
+                                "H" = "Group H",
+                                "I" = "Group I",
+                                "J" = "Group J"))
+
+participants <- participants %>%
+  mutate(haveKids = if_else(haveKids == "TRUE", TRUE, FALSE)) # Convert "TRUE" and "FALSE" to boolean TRUE and FALSE
+```
+
+Next, we need to validate the "timestamp" variable in the "financial_journal" dataset, so I converted the "timestamp" column to a proper datetime format
+
+```{r}
+Journal$timestamp <- as.POSIXct(Journal$timestamp, format = "%Y-%m-%d %H:%M:%S")
+```
+
+Now all the seems to be cleaned, lets take a quick look at each table:
+
+```{r}
+head(Journal)
+```
+
+```{r}
+head(participants)
+```
+
+Now that the data cleaning steps have been completed, we can proceed with Exploratory Data Analysis (EDA)
+
+# Exploratory Data Analysis
+
+EDA involves analyzing and visualizing the data to gain insights, understand patterns, and uncover relationships among variables.
+
+## Descriptive statistics
+
+To compute descriptive statistics for numerical variables in R, we can use the **`summary()`** function.
+
+Here's how I create plots for the variables in the **`participants`** dataframe and the **`Journal`** dataframe using the **`ggplot2`** package in R:
+
+```{r}
+# Histogram for age
+histogram_age <- ggplot(participants, aes(x = age)) +
+  geom_histogram(fill = "lightblue", color = "black") +
+  labs(title = "Distribution of Age", x = "Age", y = "Count")
+
+# Bar plot for educationLevel
+barplot_education <- ggplot(participants, aes(x = educationLevel)) +
+  geom_bar(fill = "lightblue", color = "black") +
+  labs(title = "Distribution of Education Level", x = "Education Level", y = "Count")
+
+# Bar plot for interestGroup
+barplot_interest <- ggplot(participants, aes(x = interestGroup)) +
+  geom_bar(fill = "lightblue", color = "black") +
+  labs(title = "Distribution of Interest Group", x = "Interest Group", y = "Count")
+
+# Calculate median joviality for each age group
+median_joviality <- participants %>%
+  group_by(age) %>%
+  summarize(median_joviality = median(joviality))
+
+# Plot median joviality by age group
+scatterplot_age_joviality <- ggplot(median_joviality, aes(x = age, y = median_joviality)) +
+  geom_line() +
+  labs(title = "Median Joviality by Age Group", x = "Age", y = "Median Joviality")
+
+# Arrange plots in a grid
+grid.arrange(histogram_age, barplot_education, barplot_interest, scatterplot_age_joviality,
+             nrow = 2, ncol = 2)
+```
+
+For the Age, the distribution seems very rather smooth with no clear peak or hump of a group age, it jumps up and down in between ages with no concentrated point.
+
+For the Education level, people who have high school or college level appears to be most common.
+
+For the interest group and median joviality, either of them appear to have any normal distribution symptom.
+
+```{r}
+# Box plot for amount
+boxplot_amount <- ggplot(Journal, aes(x = "", y = amount)) +
+  geom_boxplot(fill = "lightblue", color = "black", outlier.shape = NA) +
+  coord_cartesian(ylim = c(-10, 50)) +  # Set the y-axis limits as desired
+  labs(title = "Distribution of Amount", x = "", y = "Amount")
+
+# Bar plot for category
+barplot_category <- ggplot(Journal, aes(x = category)) +
+  geom_bar(fill = "lightblue", color = "black") +
+  labs(title = "Distribution of Expense Categories", x = "Category", y = "Count")
+
+# Plot total amount spent per month
+Journal$month <- floor_date(Journal$timestamp, "month")
+monthly_totals <- Journal %>%
+  group_by(month) %>%
+  summarize(total_amount = sum(amount))
+
+lineplot_total_amount <- ggplot(monthly_totals, aes(x = month, y = total_amount)) +
+  geom_line() +
+  labs(title = "Total Amount Spent per Month", x = "Month", y = "Total Amount")
+
+# Arrange plots in a grid
+grid.arrange(boxplot_amount, barplot_category, lineplot_total_amount,
+             nrow = 2, ncol = 2)
+```
+
+For the amount, as it concentrated towards the 0, it means the amount of transactions are mostly small.
+
+For the Expense category, the transaction categories are mostly on food, recreation, and wages.
+
+For the total amount spent per month, except for before April 2022, all other time spam seems quite smooth with transaction amount.
