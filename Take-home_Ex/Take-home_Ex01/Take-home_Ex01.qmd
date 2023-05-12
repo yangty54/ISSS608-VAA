@@ -506,9 +506,9 @@ Conversely, interest group H shows a significant difference in renting behavior.
 
 For other expense categories, such as "Education," "Food," "Recreation," and others, there are no significant differences observed across the interest groups. The mean counts for these categories appear to be relatively similar, suggesting that individuals in different interest groups have comparable spending patterns in these areas.
 
-## Interactive visualizations
+# Interactive visualizations
 
-### Interactive Scatter Plot: Age vs. Joviality
+## Interactive Scatter Plot: Age vs. Joviality
 
 ```{r}
 # Create an interactive scatter plot with tooltips
@@ -528,7 +528,7 @@ plot1
 
 The resulting plot allows users to interact with the data points by hovering over them to view additional information. The scatter plot visualizes the relationship between age and joviality, with each data point represented by a marker color-coded based on the education level. This interactive plot provides a dynamic way to explore and analyze the data.
 
-### Joviality over Time
+## Joviality over Time
 
 ```{r}
 plot2 <- ggplot(merged_data, aes(x = timestamp, y = joviality, color = educationLevel, size = householdSize, shape = interestGroup)) +
@@ -552,7 +552,7 @@ As the animation progresses, we can observe how the joviality levels change over
 
 By combining the timestamp, joviality, education level, household size, and interest group in an interactive and animated visualization, we can gain insights into the dynamics of joviality within different segments of the population and explore any potential relationships or correlations between these variables.
 
-### Expenses and Food Over Time
+## Expenses and Food Over Time
 
 ```{r}
 # Convert timestamp to date format
@@ -584,9 +584,9 @@ The blue line represents the total expenses, showing the overall trend in expens
 
 The visualization shows the distribution of expenses over time, with a specific focus on the food category. It is evident that food expenses constitute a relatively small portion of the overall expenses. This observation suggests that individuals in the town allocate a smaller proportion of their budget towards food compared to other expenditure categories.
 
-## Cluster Analysis
+# Cluster Analysis
 
-### Age, Household Size, and Spending Amount
+## Age, Household Size, and Spending Amount
 
 ```{r}
 # Perform cluster analysis using k-means
@@ -651,7 +651,7 @@ Cluster 3:
 
 Cluster 3: This cluster represents participants with an average age of 46.01, similar to Cluster 2. However, they have significantly smaller households, with an average size of 1.01. The mean amount spent by this cluster is the lowest at 10.27, indicating potential differences in spending behavior compared to the other clusters.
 
-### Age, Household Size, and Joviality
+## Age, Household Size, Joviality and Education Level
 
 ```{r}
 # Subsample the dataset
