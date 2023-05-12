@@ -431,20 +431,6 @@ ggplot(merged_data, aes(x = interestGroup, y = amount, fill = interestGroup)) +
   labs(title = "Distribution of Amount by Interest Group", x = "Interest Group", y = "Amount") +
   scale_fill_discrete(name = "Interest Group") +
   scale_color_discrete(name = "Interest Group")
-
-# Calculate summary statistics by interest group
-summary_stats <- merged_data %>%
-  group_by(interestGroup) %>%
-  summarize(
-    median_amount = median(amount),
-    min_amount = min(amount),
-    max_amount = max(amount),
-    sd_amount = sd(amount)
-  )
-
-# Print the summary statistics
-print(summary_stats)
-
 ```
 
 There appears no distinct and big differences across different interest groups, except fir B, C, D, E, G and J, there is a small chunk of them that plots right above the majority, indicating that there might be a specific class within the interest groups.
