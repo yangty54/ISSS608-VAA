@@ -29,10 +29,16 @@ In the code chunk below, `p_load()` of *pacman* package is used to install and l
 
 -   dplyr,
 
--   gridExtra
+-   gridExtra,
+
+-   plotly,
+
+-   gganimate,
+
+-   cluster
 
 ```{r}
-pacman::p_load(tidyverse, lubridate, stringr, ggplot2, knitr, dplyr, gridExtra)
+pacman::p_load(tidyverse, lubridate, stringr, ggplot2, knitr, dplyr, gridExtra, plotly, gganimate,transformr, cluster)
 ```
 
 # **The Data**
@@ -45,17 +51,17 @@ Contains information about the residents of City of Engagement that have agreed 
 
 -   participantId (integer): unique ID assigned to each participant.
 
--   householdSize (integer): the number of people in the participant\'s household
+-   householdSize (integer): the number of people in the participant's household
 
--   haveKids (boolean): whether there are children living in the participant\'s household.
+-   haveKids (boolean): whether there are children living in the participant's household.
 
--   age (integer): participant\'s age in years at the start of the study.
+-   age (integer): participant's age in years at the start of the study.
 
--   educationLevel (string factor): the participant\'s education level, one of: {\"Low\", \"HighSchoolOrCollege\", \"Bachelors\", \"Graduate\"}
+-   educationLevel (string factor): the participant's education level, one of: {"Low", "HighSchoolOrCollege", "Bachelors", "Graduate"}
 
--   interestGroup (char): a char representing the participant\'s stated primary interest group, one of {\"A\", \"B\", \"C\", \"D\", \"E\", \"F\", \"G\", \"H\", \"I\", \"J\"}. Note: specific topics of interest have been redacted to avoid bias.
+-   interestGroup (char): a char representing the participant's stated primary interest group, one of {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"}. Note: specific topics of interest have been redacted to avoid bias.
 
--   joviality (float): a value ranging from \[0,1\] indicating the participant\'s overall happiness level at the start of the study.
+-   joviality (float): a value ranging from \[0,1\] indicating the participant's overall happiness level at the start of the study.
 
 *FinancialJournal.csv*
 
@@ -65,7 +71,7 @@ Contains information about financial transactions.
 
 -   timestamp (datetime): the time when the check-in was logged
 
--   category (string factor): a string describing the expense category, one of {\"Education\", \"Food\", \"Recreation\", \"RentAdjustment\", \"Shelter\", \"Wage\"}
+-   category (string factor): a string describing the expense category, one of {"Education", "Food", "Recreation", "RentAdjustment", "Shelter", "Wage"}
 
 -   amount (double): the amount of the transaction
 
@@ -234,3 +240,497 @@ For the amount, as it concentrated towards the 0, it means the amount of transac
 For the Expense category, the transaction categories are mostly on food, recreation, and wages.
 
 For the total amount spent per month, except for before April 2022, all other time spam seems quite smooth with transaction amount.
+
+## Relationships between variables
+
+After finishing the descriptive statistics, let's move on to exploring the relationships between variables. Understanding the relationships between variables can provide valuable insights into the data and help uncover interesting patterns or associations.
+
+In order for a better comparison and visualization in between variables, we should join the dtaframe:
+
+```{r}
+# Join the participants and financial_journal dataframes
+merged_data <- participants %>%
+  inner_join(Journal, by = "participantId")
+
+# Check for missing values in the age variable
+missing_age <- sum(is.na(merged_data$age))
+
+# Print the number of missing values
+print(paste("Number of missing values in age:", missing_age))
+
+# Filter out the rows with missing values in age
+merged_data <- merged_data[!is.na(merged_data$age), ]
+```
+
+### Age and Joviality
+
+```{r}
+# Define the age groups
+age_groups <- c("18-25", "26-35", "36-45", "46-55", "56+")
+
+# Create a new variable for age groups
+merged_data <- merged_data %>%
+  mutate(age_group = cut(age, breaks = c(18, 25, 35, 45, 55, Inf), labels = age_groups))
+
+# Box plot for age groups and joviality
+ggplot(merged_data, aes(x = age_group, y = joviality)) +
+  geom_boxplot() +
+  labs(title = "Joviality by Age Group", x = "Age Group", y = "Joviality")
+
+# Calculate summary statistics by age group
+summary_age <- merged_data %>%
+  group_by(age_group) %>%
+  summarize(
+    mean_joviality = mean(joviality),
+    median_joviality = median(joviality),
+    min_joviality = min(joviality),
+    max_joviality = max(joviality)
+  )
+
+# Print the summary statistics
+print(summary_age)
+```
+
+Based on the summary statistics for the age groups and joviality, we can interpret the results as follows:
+
+-   Age Group "18-25":
+
+    -   Mean Joviality: 0.511
+
+    -   Median Joviality: 0.503
+
+    -   Minimum Joviality: 0.001
+
+    -   Maximum Joviality: 0.986
+
+-   Age Group "26-35":
+
+    -   Mean Joviality: 0.508
+
+    -   Median Joviality: 0.504
+
+    -   Minimum Joviality: 0.001
+
+    -   Maximum Joviality: 0.999
+
+-   Age Group "36-45":
+
+    -   Mean Joviality: 0.516
+
+    -   Median Joviality: 0.521
+
+    -   Minimum Joviality: 0.002
+
+    -   Maximum Joviality: 0.998
+
+-   Age Group "46-55":
+
+    -   Mean Joviality: 0.440
+
+    -   Median Joviality: 0.429
+
+    -   Minimum Joviality: 0.000
+
+    -   Maximum Joviality: 0.999
+
+-   Age Group "56+":
+
+    -   Mean Joviality: 0.510
+
+    -   Median Joviality: 0.491
+
+    -   Minimum Joviality: 0.000
+
+    -   Maximum Joviality: 0.992
+
+These statistics provide an overview of the joviality levels within each age group. Here are some key observations:
+
+-   The mean joviality levels are relatively consistent across the age groups, ranging from approximately 0.440 to 0.516.
+
+-   The median joviality levels show a similar pattern, with values ranging from around 0.429 to 0.521.
+
+-   The minimum and maximum joviality levels vary within each age group, indicating the range of joviality experienced by individuals in each group.
+
+-   Overall, there doesn't seem to be a clear trend or pattern in joviality levels across age groups based on these summary statistics.
+
+### Household Size and Education Level
+
+```{r}
+# Bar plot for household size and education level
+ggplot(merged_data, aes(x = householdSize, fill = educationLevel)) +
+  geom_bar() +
+  labs(title = "Household Size by Education Level", x = "Household Size", y = "Count") +
+  scale_fill_discrete(name = "Education Level")
+```
+
+From the plot above, it appears that the majority of households in the dataset have a household size of 1 or 2. Additionally, the "High School or College" education level seems to be the most prevalent across all household sizes.
+
+This suggests a possible correlation between household size and education level. It is likely that individuals living alone or in smaller households (size 1 or 2) are more likely to have completed high school or attended college, as reflected by the higher count in the "High School or College" category for these household sizes.
+
+On the other hand, larger household sizes (beyond size 2) may include a mix of different education levels, as evidenced by the presence of "Bachelors" and "Graduate" categories in these groups. This suggests a less diversity of education levels within larger households.
+
+### Education Level and Joviality
+
+```{r}
+# Box plot for education level and joviality
+ggplot(merged_data, aes(x = educationLevel, y = joviality)) +
+  geom_boxplot() +
+  labs(title = "Joviality by Education Level", x = "Education Level", y = "Joviality")
+```
+
+Based on these results, we can make a scientific guess that individuals with higher education levels, such as "Graduate" and "Bachelors," tend to have higher median joviality scores compared to those with lower education levels, such as "Low" and "High School or College." Additionally, individuals with higher education levels generally have a wider range of joviality values, as indicated by the larger differences between the minimum and maximum joviality values.
+
+### Interest Group and Joviality
+
+```{r}
+# Box plot for interest group and joviality
+ggplot(merged_data, aes(x = interestGroup, y = joviality)) +
+  geom_boxplot() +
+  labs(title = "Joviality by Interest Group", x = "Interest Group", y = "Joviality")
+```
+
+Based on these results, we can make a scientific guess that different interest groups may have varying levels of median joviality. For example, "Group E" and "Group B" have relatively higher median joviality compared to "Group H" and "Group D." However, it's important to note that there could be other factors influencing joviality, and this analysis only considers the provided data.
+
+### Household Size and Amount
+
+```{r}
+# Scatter plot for household size and amount
+ggplot(merged_data, aes(x = as.factor(householdSize), y = amount, fill = as.factor(householdSize))) +
+  geom_bar(stat = "summary", fun = "mean", position = "dodge") +
+  labs(title = "Mean Amount by Household Size", x = "Household Size", y = "Mean Amount") +
+  scale_fill_discrete(name = "Household Size")
+```
+
+Based on these results, we can make a scientific analysis that households with larger sizes tend to have slightly higher mean amounts compared to smaller households. However, it's important to note that the median amount is the same for all household sizes, suggesting a similar distribution of amounts regardless of household size.
+
+Additionally, the range of amounts spent varies across different household sizes, as indicated by the differences in the minimum and maximum amounts. This implies that there might be variations in spending habits and financial situations among households of different sizes.
+
+### Education Level and Amount
+
+```{r}
+# Box plot for education level and amount
+ggplot(merged_data, aes(x = educationLevel, y = amount, fill = educationLevel)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(color = educationLevel), width = 0.2, height = 0, alpha = 0.5) +
+  labs(title = "Distribution of Amount by Education Level", x = "Education Level", y = "Amount") +
+  scale_fill_discrete(name = "Education Level") +
+  scale_color_discrete(name = "Education Level")
+```
+
+Based on these results, we can make a scientific analysis that individuals with higher education levels, such as "Graduate" and "Bachelors," tend to have higher maximum amounts spent compared to those with lower education levels, such as "Low" and "High School or College."
+
+The data reveals that within each education level group, there are individuals who have higher amounts spent or higher income compared to others in the same group. This suggests that being successful is always a possibility, regardless of education level, as personal circumstances, career choices, skills, networking, and opportunities also play a significant role.Education level is an important factor that can contribute to success and income, but it is not the sole determinant. Education provides knowledge and opportunities, but it does not guarantee automatic financial prosperity. Success is multifaceted and influenced by various factors beyond education alone.
+
+### Interest Group and Amount
+
+```{r}
+# Box plot for interest group and amount
+ggplot(merged_data, aes(x = interestGroup, y = amount, fill = interestGroup)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(color = interestGroup), width = 0.2, height = 0, alpha = 0.5) +
+  labs(title = "Distribution of Amount by Interest Group", x = "Interest Group", y = "Amount") +
+  scale_fill_discrete(name = "Interest Group") +
+  scale_color_discrete(name = "Interest Group")
+
+# Calculate summary statistics by interest group
+summary_stats <- merged_data %>%
+  group_by(interestGroup) %>%
+  summarize(
+    median_amount = median(amount),
+    min_amount = min(amount),
+    max_amount = max(amount),
+    sd_amount = sd(amount)
+  )
+
+# Print the summary statistics
+print(summary_stats)
+
+```
+
+There appears no distinct and big differences across different interest groups, except fir B, C, D, E, G and J, there is a small chunk of them that plots right above the majority, indicating that there might be a specific class within the interest groups.
+
+### Age and Amount
+
+```{r}
+# Scatter plot for age and amount
+ggplot(merged_data, aes(x = age_group, y = amount, fill = age_group)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(color = age_group), width = 0.2, height = 0, alpha = 0.5) +
+  labs(title = "Distribution of Amount by Age Group", x = "Age Group", y = "Amount") +
+  scale_fill_discrete(name = "Age Group") +
+  scale_color_discrete(name = "Age Group")
+```
+
+For the age group and the expenses plot, it appears to have a similar pattern with the previous two plots. While distinct classes are found, indicates age might not be de determinant factor of different class.
+
+Analyzing the relationship between age group and financial outcomes is complex and multidimensional. It requires considering a broader range of variables and conducting more in-depth statistical analyses to gain a comprehensive understanding of the factors influencing success and income.
+
+### Education Level and Expenses Category
+
+```{r}
+# Bar plot for education level and expense category (mean expenses)
+ggplot(merged_data, aes(x = educationLevel, y = amount, fill = category)) +
+  stat_summary(fun = "mean", geom = "bar", position = "dodge") +
+  labs(title = "Mean Expense Category by Education Level", x = "Education Level", y = "Mean Expense") +
+  scale_fill_discrete(name = "Expense Category")
+
+# Calculate the mean expenses per category and education level
+summary_stats <- merged_data %>%
+  group_by(educationLevel, category) %>%
+  summarize(mean_amount = mean(amount))
+
+# Print the summary statistics
+print(summary_stats)
+
+```
+
+For individuals with a Graduate level of education, the mean amount spent on wages appears to be the highest among all expense categories. Additionally, the highest mean spending in the "Shelter" category suggests that individuals with a Graduate degree allocate a significant portion of their expenses towards their living arrangements.
+
+For individuals with a Bachelor's degree, the "RentAdjustment" category tends to have the highest mean amount compared to other expense categories. This indicates that individuals with a high level of education, such as a Bachelor's degree, allocate a larger proportion of their expenses towards adjusting their rent.
+
+On the other hand, for individuals with a low education level, the mean spending on shelter is the lowest among all groups. This implies that individuals with lower education levels tend to allocate less money towards their living environment or housing expenses. In other words, lower education levels may play a role in determining lower spending on shelter, indicating potential differences in financial capabilities and living conditions based on educational attainment.
+
+### Interest Group and Expense Category
+
+```{r}
+# Bar plot for interest group and expense category (mean values)
+ggplot(merged_data, aes(x = interestGroup, fill = category)) +
+  stat_summary(aes(y = amount, group = category), fun = "mean", geom = "bar") +
+  labs(title = "Mean Expense Category by Interest Group", x = "Interest Group", y = "Mean Count") +
+  scale_fill_discrete(name = "Expense Category")
+```
+
+For interest groups E, G, and I, the mean count for the "RentAdjustment" category appears to be relatively low compared to other interest groups. This suggests that individuals in these groups, on average, spend less on adjusting their rent compared to individuals in other interest groups.
+
+Conversely, interest group H shows a significant difference in renting behavior. The mean count for the "RentAdjustment" category is notably higher in group H compared to other interest groups. This indicates that individuals in interest group H, on average, allocate a larger portion of their expenses towards adjusting their rent.
+
+For other expense categories, such as "Education," "Food," "Recreation," and others, there are no significant differences observed across the interest groups. The mean counts for these categories appear to be relatively similar, suggesting that individuals in different interest groups have comparable spending patterns in these areas.
+
+## Interactive visualizations
+
+### Interactive Scatter Plot: Age vs. Joviality
+
+```{r}
+# Create an interactive scatter plot with tooltips
+plot1 <- plot_ly(data = participants, x = ~age, y = ~joviality, color = ~educationLevel,
+             text = ~paste("Participant ID:", participantId, "<br>",
+                           "Education Level:", educationLevel, "<br>",
+                           "Interest Group:", interestGroup),
+             hoverinfo = "text",
+             type = "scatter", mode = "markers") %>%
+  layout(title = "Interactive Scatter Plot: Age vs. Joviality",
+         xaxis = list(title = "Age"),
+         yaxis = list(title = "Joviality"))
+
+# Display the interactive plot
+plot1
+```
+
+The resulting plot allows users to interact with the data points by hovering over them to view additional information. The scatter plot visualizes the relationship between age and joviality, with each data point represented by a marker color-coded based on the education level. This interactive plot provides a dynamic way to explore and analyze the data.
+
+### Joviality over Time
+
+```{r}
+plot2 <- ggplot(merged_data, aes(x = timestamp, y = joviality, color = educationLevel, size = householdSize, shape = interestGroup)) +
+  geom_point() +
+  scale_color_manual(values = c("#FF0000", "#00FF00", "#0000FF", "#FFFF00"), name = "Education Level") +
+  scale_size(range = c(2, 10), name = "Household Size") +
+  scale_shape_manual(values = c(16, 17, 18, 19, 20, 21, 22, 23, 24, 25), name = "Interest Group") +
+  labs(title = "Joviality over Time", x = "Timestamp", y = "Joviality") +
+  transition_time(timestamp) +
+  ease_aes('linear')
+
+# Animate and save as a GIF
+anim1 <- animate(plot2, nframes = 100)
+anim_save("animated_plot1.gif", anim1, fps = 20)
+anim1
+```
+
+The animated plot shows the joviality levels over time for different individuals in the dataset. Each point represents a participant, and their positions on the plot indicate their joviality level at a specific timestamp. The color of the points represents the education level of the participants, the size represents their household size, and the shape represents their interest group.
+
+As the animation progresses, we can observe how the joviality levels change over time for individuals with different education levels, household sizes, and interest groups. The plot allows us to identify any patterns, trends, or fluctuations in joviality over time, and how they might differ across the various demographic groups.
+
+By combining the timestamp, joviality, education level, household size, and interest group in an interactive and animated visualization, we can gain insights into the dynamics of joviality within different segments of the population and explore any potential relationships or correlations between these variables.
+
+### Expenses and Food Over Time
+
+```{r}
+# Convert timestamp to date format
+merged_data$date <- as.Date(merged_data$timestamp)
+
+# Filter expenses and wages data
+expenses <- merged_data[merged_data$category != "Food", ]
+food <- merged_data[merged_data$category == "Food", ]
+
+# Create a line plot of total expenses over time
+plot3 <- ggplot() +
+  geom_line(data = expenses, aes(x = date, y = amount, color = "Expenses"), size = 1) +
+  geom_line(data = food, aes(x = date, y = amount, color = "Food"), size = 3) +
+  labs(title = "Expenses and Food Over Time", x = "Date", y = "Amount", color = "Category") +
+  scale_color_manual(values = c("Expenses" = "blue", "Food" = "green")) +
+  coord_cartesian(ylim = c(-100, 1000)) +  # Adjust the y-axis limit
+  transition_time(date) +
+  ease_aes("linear")
+
+# Animate the plot
+anim2 <- animate(plot3, nframes = 200, duration = 10)
+anim_save("animated_plot2.gif", anim2, fps = 10)
+anim2
+```
+
+The plot titled "Expenses and Food Over Time" displays the trends in expenses and food expenses over a specific time period. The x-axis represents the date, while the y-axis represents the amount of expenses. The plot includes two lines: one representing total expenses and the other representing food expenses.
+
+The blue line represents the total expenses, showing the overall trend in expenses over time. The green line represents food expenses, specifically highlighting the trend in spending on food items. By comparing the two lines, we can observe how food expenses contribute to the overall expenses and whether there are any notable patterns or fluctuations.
+
+The visualization shows the distribution of expenses over time, with a specific focus on the food category. It is evident that food expenses constitute a relatively small portion of the overall expenses. This observation suggests that individuals in the town allocate a smaller proportion of their budget towards food compared to other expenditure categories.
+
+## Cluster Analysis
+
+### Age, Household Size, and Spending Amount
+
+```{r}
+# Perform cluster analysis using k-means
+data_for_clustering <- merged_data %>%
+  select(age, householdSize, amount)
+
+# Standardize the variables
+scaled_data <- scale(data_for_clustering)
+
+# Determine the optimal number of clusters using the elbow method
+wss <- numeric(10)
+for (k in 1:10) {
+  model <- kmeans(scaled_data, centers = k)
+  wss[k] <- sum(model$withinss)
+}
+
+# Perform k-means clustering with the chosen number of clusters
+k <- 3  # Choose the number of clusters based on the elbow plot
+kmeans_model <- kmeans(scaled_data, centers = k)
+
+# Add the cluster assignments to the original dataset
+merged_data$cluster <- as.factor(kmeans_model$cluster)
+
+# Calculate cluster means
+cluster_summary <- merged_data %>%
+  group_by(cluster) %>%
+  summarize(mean_age = mean(age),
+            mean_householdSize = mean(householdSize),
+            mean_amount = mean(amount))
+
+# Print the cluster summary
+print(cluster_summary)
+```
+
+Cluster 1:
+
+-   Mean Age: 26.13
+
+-   Mean Household Size: 1.99
+
+-   Mean Amount: 18.01
+
+Cluster 1: This cluster represents a group of younger participants, with an average age of 26.13. They tend to have smaller households, with an average size of 1.99. The mean amount spent by this cluster is 18.01, which could indicate moderate spending habits among younger individuals.
+
+Cluster 2:
+
+-   Mean Age: 47.95
+
+-   Mean Household Size: 2.51
+
+-   Mean Amount: 29.55
+
+Cluster 2: This cluster consists of older participants, with an average age of 47.95. They have slightly larger households, with an average size of 2.51. The mean amount spent by this cluster is higher at 29.55, suggesting that older participants in larger households may have higher spending levels.
+
+Cluster 3:
+
+-   Mean Age: 46.01
+
+-   Mean Household Size: 1.01
+
+-   Mean Amount: 10.27
+
+Cluster 3: This cluster represents participants with an average age of 46.01, similar to Cluster 2. However, they have significantly smaller households, with an average size of 1.01. The mean amount spent by this cluster is the lowest at 10.27, indicating potential differences in spending behavior compared to the other clusters.
+
+### Age, Household Size, and Joviality
+
+```{r}
+# Subsample the dataset
+sample_size <- 5000  # Adjust the sample size as needed
+subsample <- merged_data %>% sample_n(sample_size)
+
+# Select variables for cluster analysis
+data_for_clustering <- subsample %>%
+  select(age, householdSize, joviality, educationLevel)
+
+# Convert education level to numeric labels
+data_for_clustering$educationLabel <- as.factor(data_for_clustering$educationLevel)
+
+# Standardize the numeric variables
+scaled_data <- scale(data_for_clustering[, c("age", "householdSize", "joviality")])
+
+# Perform clustering with Fanny algorithm
+k <- 4  # Number of clusters
+fanny_model <- fanny(scaled_data, k, memb.exp = 2)
+
+# Add the cluster assignments to the subsample dataset
+subsample$cluster <- as.factor(fanny_model$clustering)
+
+# Calculate cluster means
+cluster_summary <- subsample %>%
+  group_by(cluster) %>%
+  summarize(mean_age = mean(age),
+            mean_householdSize = mean(householdSize),
+            mean_joviality = mean(joviality),
+            mean_educationLevel = levels(data_for_clustering$educationLabel)[which.max(table(data_for_clustering$educationLabel))])
+
+# Print the cluster summary
+print(cluster_summary)
+```
+
+Cluster 1:
+
+Mean Age: 49.3
+
+Mean Household Size: 1.85
+
+Mean Joviality: 0.311
+
+Mean Education Level: High School or College
+
+Cluster 1: This cluster has a mean age of 49.3, indicating that the individuals in this cluster are relatively older. They have a smaller household size with an average of 1.85, suggesting that they may have fewer family members living together. The mean joviality score is 0.311, indicating a relatively lower level of joviality. The majority of individuals in this cluster have a high school or college education level.
+
+Cluster 2:
+
+Mean Age: 27.8
+
+Mean Household Size: 1.79
+
+Mean Joviality: 0.734
+
+Mean Education Level: High School or College
+
+Cluster 2: This cluster has a mean age of 27.8, indicating a relatively younger group of individuals. They have a slightly smaller household size with an average of 1.79. The mean joviality score is 0.734, indicating a higher level of joviality compared to other clusters. The majority of individuals in this cluster also have a high school or college education level.
+
+Cluster 3:
+
+Mean Age: 35.4
+
+Mean Household Size: 2.35
+
+Mean Joviality: 0.444
+
+Mean Education Level: High School or College
+
+Cluster 3: This cluster has a mean age of 35.4, indicating a middle-aged group of individuals. They have a larger household size with an average of 2.35, suggesting that they may have more family members living together. The mean joviality score is 0.444, indicating a moderate level of joviality. Similar to the other clusters, the majority of individuals in this cluster have a high school or college education level.
+
+Cluster 4:
+
+Mean Age: 45.4
+
+Mean Household Size: 1.00
+
+Mean Joviality: 0.757
+
+Mean Education Level: High School or College
+
+Cluster 4: This cluster has a mean age of 45.4, indicating a slightly older group of individuals. Interestingly, they have a household size of 1.00, suggesting that they may be living alone or in single-person households. The mean joviality score is 0.757, indicating a relatively higher level of joviality. Similar to the other clusters, the majority of individuals in this cluster have a high school or college education level.\
