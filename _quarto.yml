@@ -35,11 +35,12 @@ website:
           - text: "In-Class Exercise 5"
             href: "In-class_Ex/In-Class_Ex05/In-Class_Ex05.qmd"
             
-      
       - text: "Take-Home Exercise"
         menu:
           - text: "Take-Home Exercise 1"
             href: "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.qmd"
+          - text: "Take-Home Exercise 2"
+            href: "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.qmd"
       
       - text: "Project"
         menu:
