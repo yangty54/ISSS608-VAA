@@ -459,15 +459,6 @@ ggplot(merged_data, aes(x = educationLevel, y = amount, fill = category)) +
   stat_summary(fun = "mean", geom = "bar", position = "dodge") +
   labs(title = "Mean Expense Category by Education Level", x = "Education Level", y = "Mean Expense") +
   scale_fill_discrete(name = "Expense Category")
-
-# Calculate the mean expenses per category and education level
-summary_stats <- merged_data %>%
-  group_by(educationLevel, category) %>%
-  summarize(mean_amount = mean(amount))
-
-# Print the summary statistics
-print(summary_stats)
-
 ```
 
 For individuals with a Graduate level of education, the mean amount spent on wages appears to be the highest among all expense categories. Additionally, the highest mean spending in the "Shelter" category suggests that individuals with a Graduate degree allocate a significant portion of their expenses towards their living arrangements.
@@ -492,9 +483,11 @@ Conversely, interest group H shows a significant difference in renting behavior.
 
 For other expense categories, such as "Education," "Food," "Recreation," and others, there are no significant differences observed across the interest groups. The mean counts for these categories appear to be relatively similar, suggesting that individuals in different interest groups have comparable spending patterns in these areas.
 
-# Interactive visualizations
+# Dynamic Visualizations
 
-## Interactive Scatter Plot: Age vs. Joviality
+This section presents visually engaging and animated plots that dynamically illustrate patterns and trends in the data. These dynamic visualizations enhance the understanding of complex relationships and temporal changes by animating data points or incorporating motion. Through these interactive and dynamic elements, viewers can explore the data in a more engaging and intuitive way, enabling them to grasp insights and patterns that may not be readily apparent in static visualizations. This section adds an element of interactivity and storytelling to the data analysis process, facilitating effective communication and interpretation of the findings.
+
+## Age vs. Joviality
 
 ```{r}
 # Create an interactive scatter plot with tooltips
@@ -564,7 +557,7 @@ anim_save("animated_plot2.gif", anim2, fps = 10)
 anim2
 ```
 
-The plot titled "Expenses and Food Over Time" displays the trends in expenses and food expenses over a specific time period. The x-axis represents the date, while the y-axis represents the amount of expenses. The plot includes two lines: one representing total expenses and the other representing food expenses.
+This plot displays the trends in expenses and food expenses over a specific time period. The x-axis represents the date, while the y-axis represents the amount of expenses. The plot includes two lines: one representing total expenses and the other representing food expenses.
 
 The blue line represents the total expenses, showing the overall trend in expenses over time. The green line represents food expenses, specifically highlighting the trend in spending on food items. By comparing the two lines, we can observe how food expenses contribute to the overall expenses and whether there are any notable patterns or fluctuations.
 
@@ -572,15 +565,21 @@ The visualization shows the distribution of expenses over time, with a specific 
 
 # Cluster Analysis
 
+This section focuses on identifying distinct groups or clusters within the dataset based on similarities in the selected variables. This analysis helps uncover hidden patterns or structures in the data by grouping similar observations together and highlighting their shared characteristics. By applying clustering algorithms, such as k-means or hierarchical clustering, the data is partitioned into clusters, with each cluster representing a distinct segment or subgroup within the population. The cluster analysis provides valuable insights into the heterogeneity within the data and can be used for segmentation, profiling, or targeted strategies. By understanding the unique characteristics and behaviors of each cluster, decision-makers can tailor their approaches and interventions to specific groups, leading to more effective decision-making and resource allocation.
+
 ## Age, Household Size, and Spending Amount
 
+K-means clustering was chosen as the method for analyzing the variables age, household size, and spending amount. This approach provides a straightforward and efficient way to identify distinct groups based on similarities in these variables. By clustering individuals based on age, we can explore if there are any age-related patterns in household size and spending amount. The clustering of household size allows us to examine if different household sizes exhibit unique spending behaviors. Additionally, clustering individuals based on spending amount helps identify distinct spending profiles or segments within the population. Overall, the application of k-means clustering on age, household size, and spending amount enables us to uncover underlying patterns and relationships, assisting in targeted decision-making and strategy development based on different age groups, household sizes, and spending patterns.
+
 ```{r}
+set.seed(123)  # Set a specific seed value
+
 # Perform cluster analysis using k-means
-data_for_clustering <- merged_data %>%
+data_for_kmeans <- merged_data %>%
   select(age, householdSize, amount)
 
 # Standardize the variables
-scaled_data <- scale(data_for_clustering)
+scaled_data <- scale(data_for_kmeans)
 
 # Determine the optimal number of clusters using the elbow method
 wss <- numeric(10)
@@ -594,129 +593,188 @@ k <- 3  # Choose the number of clusters based on the elbow plot
 kmeans_model <- kmeans(scaled_data, centers = k)
 
 # Add the cluster assignments to the original dataset
-merged_data$cluster <- as.factor(kmeans_model$cluster)
+merged_data$Kmeans_cluster <- as.factor(kmeans_model$cluster)
 
 # Calculate cluster means
-cluster_summary <- merged_data %>%
-  group_by(cluster) %>%
+Kmeans_summary <- merged_data %>%
+  group_by(Kmeans_cluster) %>%
   summarize(mean_age = mean(age),
             mean_householdSize = mean(householdSize),
             mean_amount = mean(amount))
 
 # Print the cluster summary
-print(cluster_summary)
+print(Kmeans_summary)
 ```
 
+\
 Cluster 1:
 
--   Mean Age: 26.13
+Mean Age: 34.53
 
--   Mean Household Size: 1.99
+Mean Household Size: 2.61
 
--   Mean Amount: 18.01
+Mean Amount: -2.13
 
-Cluster 1: This cluster represents a group of younger participants, with an average age of 26.13. They tend to have smaller households, with an average size of 1.99. The mean amount spent by this cluster is 18.01, which could indicate moderate spending habits among younger individuals.
+Cluster 1: This cluster has a relatively younger population with a mean age of 34.53. The average household size is 2.61, suggesting that individuals in this cluster tend to live in larger households. The mean amount is -2.13, indicating that on average, individuals in this cluster have lower spending amounts.
+
+This cluster represents relatively younger individuals who live in larger households. They have lower spending amounts compared to the other clusters. This group may include young adults or families who are more cautious with their expenses and prioritize saving.
 
 Cluster 2:
 
--   Mean Age: 47.95
+Mean Age: 40.43
 
--   Mean Household Size: 2.51
+Mean Household Size: 2.20
 
--   Mean Amount: 29.55
+Mean Amount: 212.26
 
-Cluster 2: This cluster consists of older participants, with an average age of 47.95. They have slightly larger households, with an average size of 2.51. The mean amount spent by this cluster is higher at 29.55, suggesting that older participants in larger households may have higher spending levels.
+Cluster 2: This cluster has a slightly older population with a mean age of 40.43. The average household size is 2.20, suggesting that individuals in this cluster tend to live in smaller households. The mean amount is 212.26, indicating that on average, individuals in this cluster have higher spending amounts.
+
+This cluster consists of slightly older individuals who live in smaller households. They have higher spending amounts, suggesting that they may have higher incomes or different spending priorities. This group might include established professionals or affluent individuals who can afford to spend more on various expenses.
 
 Cluster 3:
 
--   Mean Age: 46.01
+Mean Age: 42.71
 
--   Mean Household Size: 1.01
+Mean Household Size: 1.26
 
--   Mean Amount: 10.27
+Mean Amount: 6.49
 
-Cluster 3: This cluster represents participants with an average age of 46.01, similar to Cluster 2. However, they have significantly smaller households, with an average size of 1.01. The mean amount spent by this cluster is the lowest at 10.27, indicating potential differences in spending behavior compared to the other clusters.
+Cluster 3: This cluster has an older population with a mean age of 42.71. The average household size is 1.26, indicating that individuals in this cluster tend to live alone or in smaller households. The mean amount is 6.49, suggesting that on average, individuals in this cluster have moderate spending amounts.
+
+This cluster represents older individuals who live alone or in smaller households. They have moderate spending amounts, indicating a balanced approach to expenses. This group could include retirees or individuals who have a more frugal lifestyle, focusing on essential needs rather than extravagant spending.
 
 ## Age, Household Size, Joviality and Education Level
 
+The fanny algorithm was selected for analyzing the variables of age, household size, joviality, and education level. Fanny, a variant of k-means clustering, is particularly suitable for categorical variables such as education level. By incorporating education level as a categorical variable, we can explore the relationship between demographic factors (age and household size) and psychological well-being (joviality) within different educational groups. Fanny algorithm allows for a more flexible clustering approach by accommodating mixed variable types, enabling us to uncover distinct clusters based on these diverse dimensions. This approach provides a comprehensive understanding of how age, household size, joviality, and education level interrelate, allowing for targeted interventions and tailored strategies to address specific needs within different demographic and educational segments of the population.
+
+Given the high computational requirements of cluster analysis, a subsample of 5000 observations was chosen to expedite the analysis process. By working with a smaller subset, the computational time was significantly reduced while still allowing for meaningful insights. It is important to note that the subsample should be representative of the larger dataset, capturing its key characteristics and variability. The use of a subsample should be clearly documented and acknowledged to ensure transparency in the analysis.
+
 ```{r}
+set.seed(1234)  # Set a specific seed value
+
 # Subsample the dataset
 sample_size <- 5000  # Adjust the sample size as needed
 subsample <- merged_data %>% sample_n(sample_size)
 
 # Select variables for cluster analysis
-data_for_clustering <- subsample %>%
+data_for_fanny <- subsample %>%
   select(age, householdSize, joviality, educationLevel)
 
 # Convert education level to numeric labels
-data_for_clustering$educationLabel <- as.factor(data_for_clustering$educationLevel)
+data_for_fanny$educationLabel <- as.factor(data_for_fanny$educationLevel)
 
 # Standardize the numeric variables
-scaled_data <- scale(data_for_clustering[, c("age", "householdSize", "joviality")])
+scaled_data <- scale(data_for_fanny[, c("age", "householdSize", "joviality")])
 
 # Perform clustering with Fanny algorithm
 k <- 4  # Number of clusters
-fanny_model <- fanny(scaled_data, k, memb.exp = 2)
+fanny_model <- fanny(scaled_data, k, memb.exp = 1.1)
 
 # Add the cluster assignments to the subsample dataset
 subsample$cluster <- as.factor(fanny_model$clustering)
 
 # Calculate cluster means
-cluster_summary <- subsample %>%
+fanny_summary <- subsample %>%
   group_by(cluster) %>%
   summarize(mean_age = mean(age),
             mean_householdSize = mean(householdSize),
             mean_joviality = mean(joviality),
-            mean_educationLevel = levels(data_for_clustering$educationLabel)[which.max(table(data_for_clustering$educationLabel))])
+            mean_educationLevel = levels(data_for_fanny$educationLabel)[which.max(table(data_for_fanny$educationLabel))])
 
 # Print the cluster summary
-print(cluster_summary)
+print(fanny_summary)
 ```
 
 Cluster 1:
 
-Mean Age: 49.3
+Mean Age: 30.57
 
-Mean Household Size: 1.85
+Mean Household Size: 1.51
 
-Mean Joviality: 0.311
+Mean Joviality: 0.799
 
 Mean Education Level: High School or College
 
-Cluster 1: This cluster has a mean age of 49.3, indicating that the individuals in this cluster are relatively older. They have a smaller household size with an average of 1.85, suggesting that they may have fewer family members living together. The mean joviality score is 0.311, indicating a relatively lower level of joviality. The majority of individuals in this cluster have a high school or college education level.
+Cluster 1: This cluster represents individuals with a mean age of 30.57, relatively smaller household sizes of 1.51, and a higher level of joviality with a mean of 0.799. The majority of individuals in this cluster have a high school or college education level.
+
+This group might include young adults who are generally cheerful and have smaller households. They could be at a stage in life where they are focused on personal growth, career development, and building relationships. Their higher level of joviality might be influenced by their youthful energy and optimism.
 
 Cluster 2:
 
-Mean Age: 27.8
+Mean Age: 51.67
 
-Mean Household Size: 1.79
+Mean Household Size: 1.47
 
-Mean Joviality: 0.734
+Mean Joviality: 0.463
 
 Mean Education Level: High School or College
 
-Cluster 2: This cluster has a mean age of 27.8, indicating a relatively younger group of individuals. They have a slightly smaller household size with an average of 1.79. The mean joviality score is 0.734, indicating a higher level of joviality compared to other clusters. The majority of individuals in this cluster also have a high school or college education level.
+Cluster 2: This cluster consists of individuals with a mean age of 51.67 and relatively smaller household sizes of 1.47. They have a lower level of joviality with a mean of 0.463. Similar to other clusters, the majority of individuals in this cluster also have a high school or college education level.
+
+This group might represent older individuals who tend to be less jovial but have smaller households. They might be in a stage of life where they have more responsibilities, such as taking care of family or managing their careers. Their lower level of joviality might be influenced by life experiences and responsibilities.
 
 Cluster 3:
 
-Mean Age: 35.4
+Mean Age: 30.06
 
-Mean Household Size: 2.35
+Mean Household Size: 1.56
 
-Mean Joviality: 0.444
+Mean Joviality: 0.254
 
 Mean Education Level: High School or College
 
-Cluster 3: This cluster has a mean age of 35.4, indicating a middle-aged group of individuals. They have a larger household size with an average of 2.35, suggesting that they may have more family members living together. The mean joviality score is 0.444, indicating a moderate level of joviality. Similar to the other clusters, the majority of individuals in this cluster have a high school or college education level.
+Cluster 3: This cluster represents individuals with a mean age of 30.06 and slightly larger household sizes of 1.56. They have a lower level of joviality with a mean of 0.254. Similar to the other clusters, the majority of individuals in this cluster have a high school or college education level.
+
+This group might include younger individuals with slightly larger households but lower joviality levels. They could be in a stage of life where they are starting families or building their careers. Their lower level of joviality might be influenced by the challenges and responsibilities they face as they transition into adulthood.
 
 Cluster 4:
 
-Mean Age: 45.4
+Mean Age: 38.31
 
-Mean Household Size: 1.00
+Mean Household Size: 3.00
 
-Mean Joviality: 0.757
+Mean Joviality: 0.477
 
 Mean Education Level: High School or College
 
-Cluster 4: This cluster has a mean age of 45.4, indicating a slightly older group of individuals. Interestingly, they have a household size of 1.00, suggesting that they may be living alone or in single-person households. The mean joviality score is 0.757, indicating a relatively higher level of joviality. Similar to the other clusters, the majority of individuals in this cluster have a high school or college education level.\
+Cluster 4: This cluster consists of individuals with a mean age of 38.31 and larger household sizes of 3.00. They have a moderate level of joviality with a mean of 0.477. Similar to other clusters, the majority of individuals in this cluster have a high school or college education level.
+
+This group might represent individuals with larger families who tend to be moderately jovial. They could be in a stage of life where they are actively managing their family life, balancing multiple responsibilities, and engaging in social interactions. Their moderate level of joviality might be influenced by their family dynamics and social connections.
+
+## Summary
+
+Based on the cluster analysis findings, we have identified distinct groups within the dataset based on demographic and behavioral characteristics. The analysis revealed variations in age, household size, spending patterns, and education level among the clusters. These findings provide valuable insights into the different segments within the dataset and can be used to understand the diversity among individuals in terms of their financial behaviors and characteristics. The identified clusters can help inform targeted marketing strategies, personalized financial planning, and decision-making processes to better meet the specific needs and preferences of individuals within each cluster. Overall, the cluster analysis has provided a deeper understanding of the dataset and offers valuable information for making data-driven business and financial decisions.
+
+# Conclusion
+
+In conclusion, the analysis of the data has provided valuable insights for the city's community revitalization efforts and the allocation of the city renewal grant. The cluster analysis revealed distinct groups within the population based on age, household size, education level, and spending behavior. These findings shed light on various aspects of the community and can inform strategic resource allocation and decision-making processes.
+
+1.  Age Group: The age group of 46-55 appears to have lower joviality compared to other age groups. This finding suggests that individuals in this age range might exhibit a lower level of happiness or cheerfulness, which could be influenced by various factors such as life circumstances or personal experiences.
+
+2.  Household Size and Education Level: The proportion of individuals with a "low" education level is higher among those living in households with a size of 1. This observation indicates that smaller households are more likely to have individuals with a lower level of education. This relationship could be influenced by factors such as individual preferences, financial constraints, or life circumstances.
+
+3.  Education Level and Joviality: Individuals with a "low" education level exhibit a lower median joviality level. This finding suggests a potential association between education level and emotional well-being, indicating that individuals with lower education levels might experience lower levels of joviality on average. However, it's important to consider that individual differences and external factors may also contribute to variations in joviality levels.
+
+4.  Education Level and Spending on Recreation: Individuals with a bachelor's level of education tend to spend more on recreation activities. This finding suggests that higher education levels might be associated with a greater interest in leisure and recreational pursuits. This could be influenced by factors such as higher disposable income, access to educational opportunities that promote recreational interests, or personal preferences.
+
+5.  Education Level and Maximum Spending Amount: Individuals with a graduate-level education exhibit a higher maximum spending amount. This finding indicates that individuals with higher education levels might have higher earning potentials or financial resources, allowing them to engage in higher levels of spending. This could be influenced by factors such as career advancements, higher-paying job opportunities, or greater financial stability associated with higher education levels.
+
+6.  K-means analysis: We identified three distinct clusters. Cluster 1 consists of individuals with a relatively younger age (mean age: 34.53) and moderate household size (mean household size: 2.61). However, they exhibit a negative mean spending amount (-2.13), indicating potential financial challenges. Cluster 2 represents a slightly older group (mean age: 40.43) with a similar household size (mean household size: 2.20), but they display a significantly higher mean spending amount (212.26). This suggests that they may have higher disposable income or engage in higher-value transactions. Cluster 3 represents a relatively older group (mean age: 42.71) with a smaller household size (mean household size: 1.26) and a modest mean spending amount (6.49).
+
+7.  Fanny analysis: We identified four distinct clusters. Cluster 1 consists of younger individuals (mean age: 30.57) with a moderate household size (mean household size: 1.51) and relatively high joviality (mean joviality: 0.80). The majority of individuals in this cluster have a high school or college education level. Cluster 2 represents an older group (mean age: 51.67) with a similar household size (mean household size: 1.47) but lower joviality (mean joviality: 0.46). Cluster 3 consists of younger individuals (mean age: 30.06) with a slightly larger household size (mean household size: 1.56) and lower joviality (mean joviality: 0.25). Cluster 4 represents individuals with a moderate age (mean age: 38.31), larger household size (mean household size: 3.00), and moderate joviality (mean joviality: 0.48). The majority of individuals in all clusters have a high school or college education level.These findings provide actionable insights for the city's decision-makers, enabling them to develop targeted programs and interventions that address the specific needs and preferences of different segments of the population. By leveraging these insights, the city can make informed decisions regarding the allocation of resources, ensuring that the community's needs are effectively addressed and that the city renewal grant is utilized for maximum impact.
+
+The analysis of the data has provided valuable insights into the community's demographics, spending behavior, and educational levels, revealing distinct patterns and associations. These findings have shed light on various aspects of the community and highlighted areas where targeted interventions and resource allocation can make a meaningful impact. Based on these findings, several actionable recommendations emerge.
+
+1.  Targeted Support for Age Group with Lower Joviality: Develop programs and initiatives that promote emotional well-being and enhance the joviality of the age group (46-55) exhibiting lower levels of happiness. This could include mental health support, social engagement activities, or community events aimed at fostering a sense of joy and contentment.
+
+2.  Educational Opportunities for Smaller Households and Lower Education Levels: Allocate resources to provide educational opportunities, vocational training, or skill development programs for individuals living in smaller households and those with lower education levels. This can empower them with knowledge and skills, enhancing their employability and long-term prospects.
+
+3.  Investment in Recreational Facilities and Activities: Direct resources towards the development of recreational facilities, community centers, parks, and cultural programs that cater to the interests and preferences of individuals with bachelor's degrees. This can provide them with enriching leisure experiences and promote a vibrant community life.
+
+4.  Support Entrepreneurship and Economic Empowerment for Graduate-Level Individuals: Allocate resources to support entrepreneurship programs, mentorship initiatives, and business development opportunities for individuals with graduate-level education. This can stimulate economic growth, job creation, and innovation within the community.
+
+5.  Tailored Financial and Business Support for Different Clusters: Provide targeted financial and business support to different clusters based on their characteristics. For example, Cluster 1, consisting of younger individuals with moderate household size, could benefit from financial literacy programs and entrepreneurship training. Cluster 2, with older individuals and higher spending amounts, might benefit from financial planning and retirement savings initiatives. Cluster 3, with a larger household size, could benefit from support programs for family finances and budgeting. Cluster 4, with a moderate household size and joviality, could benefit from programs that enhance financial management skills and promote savings.
+
+6.  Collaboration and Partnerships: Foster collaborations and partnerships with local educational institutions, community organizations, and businesses to leverage their expertise, resources, and networks. This can enhance the effectiveness of resource allocation efforts and create synergies for community revitalization.
+
+At the end, the comprehensive analysis of the data, including exploratory data analysis, interactive visualizations, and cluster analysis, has provided valuable insights for the city's community revitalization efforts and the allocation of the city renewal grant. By uncovering distinct demographic groups, spending behavior patterns, and educational associations, we have gained a deeper understanding of the community's needs, preferences, and potential areas of improvement. Through the implementation of targeted actions, such as supporting specific age groups, promoting educational opportunities, investing in recreational facilities, and fostering entrepreneurship, the city can harness these insights to drive positive change and create a vibrant and inclusive community. The findings from this analysis, coupled with the proposed actions, form a solid foundation for strategic decision-making and resource allocation, positioning the city for a successful and impactful community revitalization journey.
