@@ -1,0 +1,23 @@
+---
+title: "Project"
+author: "Yang Tianyi"
+editor: visual
+---
+
+```{r}
+pacman::p_load(jsonlite, tidyverse, ggraph, visNetwork, tidygraph)
+```
+
+```{r}
+MC1 <- fromJSON("data/MC1/MC1.json")
+```
+
+```{r}
+MC1_nodes <- as_tibble(MC1$nodes) %>%
+  select(id, type, country)
+```
+
+```{r}
+MC1_edges <- as_tibble(MC1$links) %>%
+  select(source, target, type, weight, key)
+```
