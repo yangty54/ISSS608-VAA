@@ -7,6 +7,9 @@ website:
 
   navbar:
     left:
+      - text: "Project"
+        href: "Project/Project.qmd"
+        
       - text: "Hands-on Exercise"
         menu:
           - text: "Hands-on Exercise 1"
@@ -44,8 +47,6 @@ website:
       
       
     right:
-      - text: "Project"
-        href: "Project/Project.qmd"
       - href: index.qmd
         text: Home
       - href: about.qmd
