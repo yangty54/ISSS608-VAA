@@ -2,6 +2,10 @@
 title: "Project"
 author: "Yang Tianyi"
 editor: visual
+execute: 
+  warning: false
+  message: false
+format: html
 ---
 
 ```{r}

@@ -1,7 +1,6 @@
 ---
 title: "In-Class Exercise 5"
 date: "13 May 2023"
-date-modified: "'r Sys.Date()'"
 execute:
   eval: true
   echo: true
