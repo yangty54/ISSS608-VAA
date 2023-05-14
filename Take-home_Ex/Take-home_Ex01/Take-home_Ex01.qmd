@@ -1,5 +1,5 @@
 ---
-title: "Unveiling Demographic and Financial Characteristics of City of Engagement: A Data-driven Study"
+title: "Unveiling Demographic and Financial Characteristics of City of Engagement: A Visual Analysis driven Study"
 subtitle: "Take-home Ex1"
 editor: visual
 author: Yang Tianyi
@@ -35,10 +35,12 @@ In the code chunk below, `p_load()` of *pacman* package is used to install and l
 
 -   gganimate,
 
--   cluster
+-   cluster,
+
+-   GGally,
 
 ```{r}
-pacman::p_load(tidyverse, lubridate, stringr, ggplot2, knitr, dplyr, gridExtra, plotly, gganimate,transformr, cluster)
+pacman::p_load(tidyverse, lubridate, stringr, ggplot2, knitr, dplyr, gridExtra, plotly, gganimate,transformr, cluster, GGally)
 ```
 
 # **The Data**
@@ -510,26 +512,49 @@ The resulting plot allows users to interact with the data points by hovering ove
 ## Joviality over Time
 
 ```{r}
-plot2 <- ggplot(merged_data, aes(x = timestamp, y = joviality, color = educationLevel, size = householdSize, shape = interestGroup)) +
-  geom_point() +
+set.seed(1234)  # Set a specific seed value
+
+# Subsample the dataset
+sample_size <- 2000  # Adjust the sample size as needed
+subsample <- merged_data %>% sample_n(sample_size)
+
+# Calculate the moving average of joviality for each education level
+moving_average_data <- subsample %>%
+  arrange(timestamp) %>%
+  group_by(educationLevel) %>%
+  mutate(moving_avg_joviality = zoo::rollmean(joviality, k = 10, fill = NA))
+
+plot2 <- ggplot(moving_average_data, aes(x = timestamp, y = moving_avg_joviality, color = educationLevel)) +
+  geom_line(size = 1, lineend = "round", na.rm = TRUE) +
   scale_color_manual(values = c("#FF0000", "#00FF00", "#0000FF", "#FFFF00"), name = "Education Level") +
-  scale_size(range = c(2, 10), name = "Household Size") +
-  scale_shape_manual(values = c(16, 17, 18, 19, 20, 21, 22, 23, 24, 25), name = "Interest Group") +
-  labs(title = "Joviality over Time", x = "Timestamp", y = "Joviality") +
-  transition_time(timestamp) +
+  labs(title = "Moving Average of Joviality by Education Level over Time", x = "Timestamp", y = "Moving Average Joviality") +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  transition_reveal(timestamp) +
   ease_aes('linear')
 
-# Animate and save as a GIF
-anim1 <- animate(plot2, nframes = 100)
-anim_save("animated_plot1.gif", anim1, fps = 20)
+# Animate and display the plot
+anim1 <- animate(plot2, nframes = 200, fps = 5, end_pause = 20)
+anim_save("animated_plot1.gif", anim1)
 anim1
+
 ```
 
-The animated plot shows the joviality levels over time for different individuals in the dataset. Each point represents a participant, and their positions on the plot indicate their joviality level at a specific timestamp. The color of the points represents the education level of the participants, the size represents their household size, and the shape represents their interest group.
+The animated line chart shows the moving average of joviality over time, with separate lines for each education level. The animation creates a dynamic view of how the moving average of joviality changes over time for each education level.
 
-As the animation progresses, we can observe how the joviality levels change over time for individuals with different education levels, household sizes, and interest groups. The plot allows us to identify any patterns, trends, or fluctuations in joviality over time, and how they might differ across the various demographic groups.
+A moving average smooths out short-term fluctuations and highlights longer-term trends in the data. In this case, we use a window of 10 data points for calculating the moving average. The moving average of joviality for each education level is calculated at each timestamp within the given window.
 
-By combining the timestamp, joviality, education level, household size, and interest group in an interactive and animated visualization, we can gain insights into the dynamics of joviality within different segments of the population and explore any potential relationships or correlations between these variables.
+Here's a brief interpretation of the plot:
+
+1.  X-axis (Timestamp): Represents the time variable, showing the progression of the data over time.
+
+2.  Y-axis (Moving Average Joviality): Represents the moving average of joviality calculated for each education level at each timestamp. The moving average smooths out the short-term fluctuations in joviality and highlights the overall trend.
+
+3.  Color-coded lines (Education Level): Each line in the plot represents a different education level. The color-coding allows you to easily distinguish between the education levels and observe their trends in joviality over time.
+
+In the animation, the "Graduate" group consistently shows higher moving average joviality compared to the other groups, while the "High school and college" group consistently shows lower moving average joviality. This observation suggests that there is a noticeable difference in joviality between these two education levels.
+
+The animated line chart reveals that although there is no significant overall increase or decrease in joviality across different education levels, there are numerous fluctuations along the way. This observation implies that people's happiness or joviality is subject to constant change.
 
 ## Expenses and Food Over Time
 
@@ -604,6 +629,36 @@ Kmeans_summary <- merged_data %>%
 
 # Print the cluster summary
 print(Kmeans_summary)
+```
+
+```{r}
+# Prepare the data for visualization
+kmeans_plot <- merged_data %>%
+  select(age, householdSize, amount, Kmeans_cluster)
+
+# Create the scatterplot matrix
+kmeans_matrix <- ggpairs(kmeans_plot, columns = c("age", "householdSize", "amount"), mapping = aes(color = Kmeans_cluster), alpha = 0.6) +
+  theme_minimal() +
+  labs(title = "Cluster Analysis: K-means", color = "Cluster") +
+  scale_color_manual(values = c("blue", "green", "red")) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# Display the scatterplot matrix
+kmeans_matrix
+```
+
+```{r}
+# Create bubble plot
+ggplot(Kmeans_summary, aes(x = mean_age, y = mean_householdSize, size = mean_amount, color = Kmeans_cluster)) +
+  geom_point(alpha = 0.8) +
+  labs(title = "Cluster Analysis: Age, Household Size, and Spending Amount",
+       x = "Average Age",
+       y = "Average Household Size",
+       color = "Cluster",
+       size = "Average Spending Amount") +
+  scale_size(range = c(5, 15)) +
+  theme_minimal()
+
 ```
 
 \
@@ -683,6 +738,38 @@ fanny_summary <- subsample %>%
 
 # Print the cluster summary
 print(fanny_summary)
+```
+
+```{r}
+# Create a scatterplot matrix
+plot <- ggpairs(subsample,
+                columns = c("age", "householdSize", "joviality", "educationLevel"),
+                mapping = ggplot2::aes(color = cluster)) +
+  ggplot2::theme_minimal() +
+  ggplot2::theme(legend.position = "bottom")
+
+# Display the plot
+print(plot)
+```
+
+```{r}
+fanny_plot <- plot_ly() %>%
+  add_trace(data = subsample,
+            x = ~age,
+            y = ~householdSize,
+            z = ~joviality,
+            type = "scatter3d",
+            mode = "markers",
+            marker = list(size = 3,
+                          color = ~as.numeric(cluster),
+                          colorscale = "Viridis"),
+            text = ~paste0("Cluster: ", cluster)) %>%
+  layout(scene = list(xaxis = list(title = "Age"),
+                      yaxis = list(title = "Household Size"),
+                      zaxis = list(title = "Joviality")),
+         title = "3D Scatterplot of Clusters")
+
+print(fanny_plot)
 ```
 
 Cluster 1:
