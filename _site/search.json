@@ -306,5 +306,12 @@
     "title": "Unveiling Demographic and Financial Characteristics of City of Engagement: A Visual Analysis driven Study",
     "section": "Summary",
     "text": "Summary\nBased on the cluster analysis findings, we have identified distinct groups within the dataset based on demographic and behavioral characteristics. The analysis revealed variations in age, household size, spending patterns, and education level among the clusters. These findings provide valuable insights into the different segments within the dataset and can be used to understand the diversity among individuals in terms of their financial behaviors and characteristics. The identified clusters can help inform targeted marketing strategies, personalized financial planning, and decision-making processes to better meet the specific needs and preferences of individuals within each cluster. Overall, the cluster analysis has provided a deeper understanding of the dataset and offers valuable information for making data-driven business and financial decisions."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html",
+    "href": "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html",
+    "title": "Take-home Exercise 2",
+    "section": "",
+    "text": "pacman::p_load(jsonlite, tidygraph, ggraph, visNetwork, tidyverse, lubridate, igraph)\n\n\nMC2 <- fromJSON(\"data/mc2_challenge_graph.json\")\n\n\nMC2_nodes <- as_tibble(MC2$nodes) %>%\n  select(id, shpcountry, rcvcountry)\n\n\nMC2_edges <- as_tibble(MC2$links) %>%\n  select(source, target, hscode, arrivaldate, volumeteu,\n         weightkg, valueofgoods_omu)"
   }
 ]

@@ -7,3 +7,22 @@ execute:
   message: false
 format: html
 ---
+
+```{r}
+pacman::p_load(jsonlite, tidygraph, ggraph, visNetwork, tidyverse, lubridate, igraph)
+```
+
+```{r}
+MC2 <- fromJSON("data/mc2_challenge_graph.json")
+```
+
+```{r}
+MC2_nodes <- as_tibble(MC2$nodes) %>%
+  select(id, shpcountry, rcvcountry)
+```
+
+```{r}
+MC2_edges <- as_tibble(MC2$links) %>%
+  select(source, target, hscode, arrivaldate, volumeteu,
+         weightkg, valueofgoods_omu)
+```
