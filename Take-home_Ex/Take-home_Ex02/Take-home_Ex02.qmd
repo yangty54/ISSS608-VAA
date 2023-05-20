@@ -26,3 +26,5 @@ MC2_edges <- as_tibble(MC2$links) %>%
   select(source, target, hscode, arrivaldate, volumeteu,
          weightkg, valueofgoods_omu)
 ```
+
+The data
