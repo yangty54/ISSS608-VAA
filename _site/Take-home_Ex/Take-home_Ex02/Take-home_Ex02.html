@@ -241,7 +241,51 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link active" data-scroll-target="#getting-started">Getting Started</a>
+  <ul class="collapse">
+  <li><a href="#data-import" id="toc-data-import" class="nav-link" data-scroll-target="#data-import"><strong>Data Import</strong></a></li>
+  <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling"><strong>Data Wrangling</strong></a>
+  <ul class="collapse">
+  <li><a href="#extracting-the-nodes" id="toc-extracting-the-nodes" class="nav-link" data-scroll-target="#extracting-the-nodes"><strong>Extracting the nodes</strong></a></li>
+  <li><a href="#extracting-the-edges" id="toc-extracting-the-edges" class="nav-link" data-scroll-target="#extracting-the-edges"><strong>Extracting the edges</strong></a></li>
+  <li><a href="#preparing-edges-data-table" id="toc-preparing-edges-data-table" class="nav-link" data-scroll-target="#preparing-edges-data-table"><strong>Preparing edges data table</strong></a></li>
+  </ul></li>
+  <li><a href="#preparing-nodes-data" id="toc-preparing-nodes-data" class="nav-link" data-scroll-target="#preparing-nodes-data"><strong>Preparing nodes data</strong></a></li>
+  </ul></li>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">Data Preparation</a>
+  <ul class="collapse">
+  <li><a href="#handling-missing-values" id="toc-handling-missing-values" class="nav-link" data-scroll-target="#handling-missing-values">Handling Missing Values</a></li>
+  <li><a href="#data-cleaning" id="toc-data-cleaning" class="nav-link" data-scroll-target="#data-cleaning">Data Cleaning</a>
+  <ul class="collapse">
+  <li><a href="#aggregation-or-summarization" id="toc-aggregation-or-summarization" class="nav-link" data-scroll-target="#aggregation-or-summarization">Aggregation or Summarization</a></li>
+  </ul></li>
+  <li><a href="#eda" id="toc-eda" class="nav-link" data-scroll-target="#eda">EDA</a>
+  <ul class="collapse">
+  <li><a href="#violin-plot" id="toc-violin-plot" class="nav-link" data-scroll-target="#violin-plot">Violin Plot</a></li>
+  <li><a href="#time-series-graph" id="toc-time-series-graph" class="nav-link" data-scroll-target="#time-series-graph">Time Series graph</a></li>
+  <li><a href="#scatterplot-matrix" id="toc-scatterplot-matrix" class="nav-link" data-scroll-target="#scatterplot-matrix">Scatterplot Matrix</a></li>
+  <li><a href="#word-cloud" id="toc-word-cloud" class="nav-link" data-scroll-target="#word-cloud">Word Cloud</a></li>
+  <li><a href="#treemap" id="toc-treemap" class="nav-link" data-scroll-target="#treemap">Treemap</a></li>
+  <li><a href="#network-graph" id="toc-network-graph" class="nav-link" data-scroll-target="#network-graph">Network Graph</a></li>
+  </ul></li>
+  <li><a href="#data-imputation" id="toc-data-imputation" class="nav-link" data-scroll-target="#data-imputation">Data Imputation</a></li>
+  <li><a href="#the-new-eda" id="toc-the-new-eda" class="nav-link" data-scroll-target="#the-new-eda">The New EDA</a>
+  <ul class="collapse">
+  <li><a href="#time-series-graph-1" id="toc-time-series-graph-1" class="nav-link" data-scroll-target="#time-series-graph-1">Time Series Graph</a></li>
+  <li><a href="#network-graph-1" id="toc-network-graph-1" class="nav-link" data-scroll-target="#network-graph-1">Network Graph</a></li>
+  <li><a href="#scatterplot" id="toc-scatterplot" class="nav-link" data-scroll-target="#scatterplot"><strong>Scatterplot</strong></a></li>
+  <li><a href="#histogram" id="toc-histogram" class="nav-link" data-scroll-target="#histogram"><strong>Histogram</strong></a></li>
+  <li><a href="#boxplot" id="toc-boxplot" class="nav-link" data-scroll-target="#boxplot"><strong>Boxplot</strong></a></li>
+  <li><a href="#scatterplot-2" id="toc-scatterplot-2" class="nav-link" data-scroll-target="#scatterplot-2">Scatterplot 2</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -269,23 +313,524 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
+<section id="getting-started" class="level1">
+<h1>Getting Started</h1>
+<p>The code chunk below will be used to install and load the necessary R packages to meet the data preparation, data wrangling, data analysis and visualisation needs.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(jsonlite, tidygraph, ggraph, visNetwork, tidyverse, lubridate, igraph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(jsonlite, tidygraph, ggraph, visNetwork, tidyverse, lubridate, igraph, stringr, ggplot2, GGally, igraph, ggforce, wordcloud, treemap, gridExtra, reshape2, mice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<section id="data-import" class="level2">
+<h2 class="anchored" data-anchor-id="data-import"><strong>Data Import</strong></h2>
+<p>In the code chunk below, <code>fromJSON()</code> of <strong>jsonlite</strong> package is used to import <em>mc2_challenge_graph.json</em> into R environment.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>MC2 <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="st">"data/mc2_challenge_graph.json"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Examine the list object created by using RStudio, especially <em>nodes</em> and <em>links</em> data tables.</p>
+</section>
+<section id="data-wrangling" class="level2">
+<h2 class="anchored" data-anchor-id="data-wrangling"><strong>Data Wrangling</strong></h2>
+<section id="extracting-the-nodes" class="level3">
+<h3 class="anchored" data-anchor-id="extracting-the-nodes"><strong>Extracting the nodes</strong></h3>
+<p>The code chunk is used to extract <em>nodes</em> data table from <em>mc2_data</em> list object and save the output in a tibble data frame object called <em>mc2_nodes</em>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>MC2_nodes <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(MC2<span class="sc">$</span>nodes) <span class="sc">%&gt;%</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, shpcountry, rcvcountry)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="extracting-the-edges" class="level3">
+<h3 class="anchored" data-anchor-id="extracting-the-edges"><strong>Extracting the edges</strong></h3>
+<p>The code chunk is used to extract <em>edgess</em> data table from <em>mc2_data</em> list object and save the output in a tibble data frame object called <em>mc2_edges</em>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>MC2_edges <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(MC2<span class="sc">$</span>links) <span class="sc">%&gt;%</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(source, target, hscode, arrivaldate, volumeteu,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>         weightkg, valueofgoods_omu)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ArrivalDate =</span> <span class="fu">ymd</span>(arrivaldate)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="fu">year</span>(ArrivalDate)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(source, target, ArrivalDate, Year, hscode, valueofgoods_omu, </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>         volumeteu, weightkg, valueofgoodsusd) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>let’s take a closer look at the structure of the <strong><code>MC2_nodes</code></strong> and <strong><code>MC2_edges</code></strong> tibbles</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(MC2_nodes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 34,576
+Columns: 3
+$ id         &lt;chr&gt; "AquaDelight Inc and Son's", "BaringoAmerica Marine Ges.m.b…
+$ shpcountry &lt;chr&gt; "Polarinda", NA, "Oceanus", NA, "Oceanus", "Kondanovia", NA…
+$ rcvcountry &lt;chr&gt; "Oceanus", NA, "Oceanus", NA, "Oceanus", "Utoporiana", NA, …</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(MC2_edges)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 5,309,087
+Columns: 9
+$ source           &lt;chr&gt; "AquaDelight Inc and Son's", "AquaDelight Inc and Son…
+$ target           &lt;chr&gt; "BaringoAmerica Marine Ges.m.b.H.", "BaringoAmerica M…
+$ ArrivalDate      &lt;date&gt; 2034-02-12, 2034-03-13, 2028-02-07, 2028-02-23, 2028…
+$ Year             &lt;dbl&gt; 2034, 2034, 2028, 2028, 2028, 2028, 2028, 2028, 2028,…
+$ hscode           &lt;chr&gt; "630630", "630630", "470710", "470710", "470710", "47…
+$ valueofgoods_omu &lt;dbl&gt; 141015, 141015, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+$ volumeteu        &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+$ weightkg         &lt;int&gt; 4780, 6125, 10855, 11250, 11165, 11290, 9000, 19490, …
+$ valueofgoodsusd  &lt;dbl&gt; NA, NA, NA, NA, NA, NA, 87110, 188140, NA, 221110, 58…</code></pre>
+</div>
+</div>
+</section>
+<section id="preparing-edges-data-table" class="level3">
+<h3 class="anchored" data-anchor-id="preparing-edges-data-table"><strong>Preparing edges data table</strong></h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>MC2_edges_aggregated <span class="ot">&lt;-</span> MC2_edges <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(hscode <span class="sc">==</span> <span class="st">"306170"</span> <span class="sc">&amp;</span> Year <span class="sc">==</span> <span class="st">"2028"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(source, target, hscode, Year) <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">weights =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(source<span class="sc">!=</span>target) <span class="sc">%&gt;%</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(weights <span class="sc">&gt;</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="preparing-nodes-data" class="level2">
+<h2 class="anchored" data-anchor-id="preparing-nodes-data"><strong>Preparing nodes data</strong></h2>
+<p>Instead of using the nodes data table extracted from <em>mc2_data</em>, we will prepare a new nodes data table by using the source and target fields of <code>mc2_edges_aggregated</code> data table. This is necessary to ensure that the nodes in nodes data tables include all the source and target values.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>id1 <span class="ot">&lt;-</span> MC2_edges_aggregated <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(source) <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">id =</span> source)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>id2 <span class="ot">&lt;-</span> MC2_edges_aggregated <span class="sc">%&gt;%</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(target) <span class="sc">%&gt;%</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">id =</span> target)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>MC2_nodes_extracted <span class="ot">&lt;-</span> <span class="fu">rbind</span>(id1, id2) <span class="sc">%&gt;%</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="data-preparation" class="level1">
+<h1>Data Preparation</h1>
+<section id="handling-missing-values" class="level2">
+<h2 class="anchored" data-anchor-id="handling-missing-values">Handling Missing Values</h2>
+<p>Since there are way too many missing values, we cannot just omit the whole row, now we just keep the NA so far.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace missing values with NA</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>MC2_nodes <span class="ot">&lt;-</span> MC2_nodes <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">replace_na</span>(., <span class="cn">NA</span>)))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace missing values with NA</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>MC2_edges <span class="ot">&lt;-</span> MC2_edges <span class="sc">%&gt;%</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">replace_na</span>(., <span class="cn">NA</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="data-cleaning" class="level2">
+<h2 class="anchored" data-anchor-id="data-cleaning">Data Cleaning</h2>
+<section id="aggregation-or-summarization" class="level3">
+<h3 class="anchored" data-anchor-id="aggregation-or-summarization">Aggregation or Summarization</h3>
+<p>The below code groups the <strong><code>MC2_edges</code></strong> data by month based on the <strong><code>arrivaldate</code></strong>, calculates the total weight and total value of goods for each month, and stores the results in the <strong><code>summary_by_month</code></strong> tibble.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>weight_by_month <span class="ot">&lt;-</span> MC2_edges <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">floor_date</span>(ArrivalDate, <span class="st">"month"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_weight =</span> <span class="fu">sum</span>(<span class="st">`</span><span class="at">weightkg</span><span class="st">`</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The below code joins the <strong><code>MC2_nodes</code></strong> and <strong><code>MC2_edges</code></strong> data based on the company name (<strong><code>id</code></strong>), calculates the total weight and total value of goods for each company, and stores the results in the <strong><code>summary_by_company</code></strong> tibble.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating totals by company</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>summary_by_company <span class="ot">&lt;-</span> MC2_nodes <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(MC2_edges, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"id"</span> <span class="ot">=</span> <span class="st">"source"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_weight =</span> <span class="fu">sum</span>(weightkg),</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">total_value =</span> <span class="fu">sum</span>(valueofgoods_omu))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="eda" class="level2">
+<h2 class="anchored" data-anchor-id="eda">EDA</h2>
+<p>The purpose of our visualizations is to evaluate the reliability of FishEye’s predicted knowledge graph links and identify the most reliable sets for completing the graph, focusing on uncovering patterns related to illegal fishing activities and protecting marine species.</p>
+<section id="violin-plot" class="level3">
+<h3 class="anchored" data-anchor-id="violin-plot">Violin Plot</h3>
+<p>Below is the the violin plot for weight and value grouped by company, the weight graph shows a reversed T, meaning a huge amount of outliers, the value plot shows a bottle gourd shape, meaning a condense in top and bottom range of the data, especially the bottom.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>violinplot_weight <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(summary_by_company, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> total_weight)) <span class="sc">+</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Total Weight"</span>) <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>violinplot_value <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(summary_by_company, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> total_value)) <span class="sc">+</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Total Value"</span>) <span class="sc">+</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(violinplot_weight, violinplot_value, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="time-series-graph" class="level3">
+<h3 class="anchored" data-anchor-id="time-series-graph">Time Series graph</h3>
+<p>The total weight in time series graph shows a peak in bit 2032, the a year-span low in 2031.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the total weight by month</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(weight_by_month, <span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> total_weight)) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Month"</span>, <span class="at">y =</span> <span class="st">"Total Weight"</span>) <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Total Weight by Month"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="scatterplot-matrix" class="level3">
+<h3 class="anchored" data-anchor-id="scatterplot-matrix">Scatterplot Matrix</h3>
+<p>Below is a scatter plot of shipping countries and receiving countries, with fake country names, it is hard to demonstrate countries based on continents and real maps.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove rows with missing values</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>cleaned_data <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(MC2_nodes)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>scatterplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(cleaned_data, <span class="fu">aes</span>(<span class="at">x =</span> shpcountry, <span class="at">y =</span> rcvcountry)) <span class="sc">+</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.x =</span> <span class="fu">element_blank</span>(), <span class="at">axis.title.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>(), <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>(), <span class="at">axis.ticks.y =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the scatterplot</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>scatterplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="word-cloud" class="level3">
+<h3 class="anchored" data-anchor-id="word-cloud">Word Cloud</h3>
+<p>Below are the word clouds of the most appeared names of the shipping and receiving countries, it could be a better demo than the scatter plot with marked labels</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the frequency of occurrence for shpcountry or rcvcountry</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>country_freq <span class="ot">&lt;-</span> <span class="fu">table</span>(MC2_nodes<span class="sc">$</span>shpcountry)  <span class="co"># Replace shpcountry with rcvcountry if desired</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the word cloud</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">wordcloud</span>(<span class="fu">names</span>(country_freq), <span class="at">freq =</span> country_freq, <span class="at">scale =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="fl">0.5</span>), <span class="at">random.order =</span> <span class="cn">FALSE</span>, <span class="at">colors =</span> <span class="fu">brewer.pal</span>(<span class="dv">8</span>, <span class="st">"Dark2"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the frequency of occurrence for shpcountry or rcvcountry</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>country_freq <span class="ot">&lt;-</span> <span class="fu">table</span>(MC2_nodes<span class="sc">$</span>rcvcountry)  <span class="co"># Replace shpcountry with rcvcountry if desired</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the word cloud</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">wordcloud</span>(<span class="fu">names</span>(country_freq), <span class="at">freq =</span> country_freq, <span class="at">scale =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="fl">0.5</span>), <span class="at">random.order =</span> <span class="cn">FALSE</span>, <span class="at">colors =</span> <span class="fu">brewer.pal</span>(<span class="dv">8</span>, <span class="st">"Dark2"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="treemap" class="level3">
+<h3 class="anchored" data-anchor-id="treemap">Treemap</h3>
+<p>Below are the treemap for the most appeared shipping and receiving countries again.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the frequency or numerical values for shpcountry or rcvcountry</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>country_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">category =</span> MC2_nodes<span class="sc">$</span>shpcountry,  <span class="co"># Replace shpcountry with rcvcountry if desired</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="dv">1</span>  <span class="co"># Replace with the desired numerical values</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the treemap</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">treemap</span>(country_data, <span class="at">index =</span> <span class="st">"category"</span>, <span class="at">vSize =</span> <span class="st">"value"</span>, <span class="at">algorithm =</span> <span class="st">"squarified"</span>,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Treemap of Country Categories"</span>, <span class="at">fontsize.labels =</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">8</span>), <span class="at">fontsize.title =</span> <span class="dv">14</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the frequency or numerical values for shpcountry or rcvcountry</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>country_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">category =</span> MC2_nodes<span class="sc">$</span>rcvcountry,  <span class="co"># Replace shpcountry with rcvcountry if desired</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="dv">1</span>  <span class="co"># Replace with the desired numerical values</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the treemap</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="fu">treemap</span>(country_data, <span class="at">index =</span> <span class="st">"category"</span>, <span class="at">vSize =</span> <span class="st">"value"</span>, <span class="at">algorithm =</span> <span class="st">"squarified"</span>,</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Treemap of Country Categories"</span>, <span class="at">fontsize.labels =</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">8</span>), <span class="at">fontsize.title =</span> <span class="dv">14</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="network-graph" class="level3">
+<h3 class="anchored" data-anchor-id="network-graph">Network Graph</h3>
+<p>Below is the network graph for the shipping and receiving countries, without clear labels, it is hard to interpret the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>mc2_graph <span class="ot">&lt;-</span> <span class="fu">tbl_graph</span>(<span class="at">nodes =</span> MC2_nodes_extracted,</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">edges =</span> MC2_edges_aggregated,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">directed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggraph</span>(mc2_graph,</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">layout =</span> <span class="st">"kk"</span>) <span class="sc">+</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>()) <span class="sc">+</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>()) <span class="sc">+</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_graph</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="data-imputation" class="level2">
+<h2 class="anchored" data-anchor-id="data-imputation">Data Imputation</h2>
+<p>With a huge amount of missing value, simply removing the whole row would not be sufficient, thus, I tried the method of imputation.</p>
+<p>To perform multiple imputation for your dataset, we can use the <strong><code>mice</code></strong> package in R.</p>
+<ol type="1">
+<li>Install and load the <strong><code>mice</code></strong> package:</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li>Create an imputation model: Define the variables that you want to impute and specify the predictors for each variable. You can use the <strong><code>mice()</code></strong> function to create the imputation model. Here’s an example:</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an imputation model</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>imp_model <span class="ot">&lt;-</span> <span class="fu">mice</span>(MC2_edges, <span class="at">method =</span> <span class="st">"mean"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ iter imp variable
+  1   1  valueofgoods_omu  volumeteu  valueofgoodsusd
+  1   2  valueofgoods_omu  volumeteu  valueofgoodsusd
+  1   3  valueofgoods_omu  volumeteu  valueofgoodsusd
+  1   4  valueofgoods_omu  volumeteu  valueofgoodsusd
+  1   5  valueofgoods_omu  volumeteu  valueofgoodsusd
+  2   1  valueofgoods_omu  volumeteu  valueofgoodsusd
+  2   2  valueofgoods_omu  volumeteu  valueofgoodsusd
+  2   3  valueofgoods_omu  volumeteu  valueofgoodsusd
+  2   4  valueofgoods_omu  volumeteu  valueofgoodsusd
+  2   5  valueofgoods_omu  volumeteu  valueofgoodsusd
+  3   1  valueofgoods_omu  volumeteu  valueofgoodsusd
+  3   2  valueofgoods_omu  volumeteu  valueofgoodsusd
+  3   3  valueofgoods_omu  volumeteu  valueofgoodsusd
+  3   4  valueofgoods_omu  volumeteu  valueofgoodsusd
+  3   5  valueofgoods_omu  volumeteu  valueofgoodsusd
+  4   1  valueofgoods_omu  volumeteu  valueofgoodsusd
+  4   2  valueofgoods_omu  volumeteu  valueofgoodsusd
+  4   3  valueofgoods_omu  volumeteu  valueofgoodsusd
+  4   4  valueofgoods_omu  volumeteu  valueofgoodsusd
+  4   5  valueofgoods_omu  volumeteu  valueofgoodsusd
+  5   1  valueofgoods_omu  volumeteu  valueofgoodsusd
+  5   2  valueofgoods_omu  volumeteu  valueofgoodsusd
+  5   3  valueofgoods_omu  volumeteu  valueofgoodsusd
+  5   4  valueofgoods_omu  volumeteu  valueofgoodsusd
+  5   5  valueofgoods_omu  volumeteu  valueofgoodsusd</code></pre>
+</div>
+</div>
+<ol start="3" type="1">
+<li>Perform the imputation: Use the <strong><code>complete()</code></strong> function to impute the missing values in each dataset. This will create multiple imputed datasets.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform multiple imputation</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>MC2_edges_imputed <span class="ot">&lt;-</span> <span class="fu">complete</span>(imp_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here is the result:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(MC2_edges_imputed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 5,309,087
+Columns: 9
+$ source           &lt;chr&gt; "AquaDelight Inc and Son's", "AquaDelight Inc and Son…
+$ target           &lt;chr&gt; "BaringoAmerica Marine Ges.m.b.H.", "BaringoAmerica M…
+$ ArrivalDate      &lt;date&gt; 2034-02-12, 2034-03-13, 2028-02-07, 2028-02-23, 2028…
+$ Year             &lt;dbl&gt; 2034, 2034, 2028, 2028, 2028, 2028, 2028, 2028, 2028,…
+$ hscode           &lt;chr&gt; "630630", "630630", "470710", "470710", "470710", "47…
+$ valueofgoods_omu &lt;dbl&gt; 141015, 141015, 1665142, 1665142, 1665142, 1665142, 1…
+$ volumeteu        &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+$ weightkg         &lt;int&gt; 4780, 6125, 10855, 11250, 11165, 11290, 9000, 19490, …
+$ valueofgoodsusd  &lt;dbl&gt; 873608.4, 873608.4, 873608.4, 873608.4, 873608.4, 873…</code></pre>
+</div>
+</div>
+<p>Since the categorical variables are hard to work on a imputation, lets do a random sampling on the nodes dataset.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify missing values in the "shpcountry" variable</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>missing_indices <span class="ot">&lt;-</span> <span class="fu">is.na</span>(MC2_nodes<span class="sc">$</span>shpcountry)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the observed categories in the "shpcountry" variable</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>observed_categories <span class="ot">&lt;-</span> MC2_nodes<span class="sc">$</span>shpcountry[<span class="sc">!</span>missing_indices]</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate random samples for missing values</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>imputed_values <span class="ot">&lt;-</span> <span class="fu">sample</span>(observed_categories, <span class="fu">sum</span>(missing_indices), <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace missing values with imputed values</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>MC2_nodes<span class="sc">$</span>shpcountry[missing_indices] <span class="ot">&lt;-</span> imputed_values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And random sampling to impute missing values in the “rcvcountry” variable</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify missing values in the "rcvcountry" variable</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>missing_indices <span class="ot">&lt;-</span> <span class="fu">is.na</span>(MC2_nodes<span class="sc">$</span>rcvcountry)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the observed categories in the "rcvcountry" variable</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>observed_categories <span class="ot">&lt;-</span> MC2_nodes<span class="sc">$</span>rcvcountry[<span class="sc">!</span>missing_indices]</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate random samples for missing values</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>imputed_values <span class="ot">&lt;-</span> <span class="fu">sample</span>(observed_categories, <span class="fu">sum</span>(missing_indices), <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace missing values with imputed values</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>MC2_nodes<span class="sc">$</span>rcvcountry[missing_indices] <span class="ot">&lt;-</span> imputed_values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here is the result:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(MC2_nodes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 34,576
+Columns: 3
+$ id         &lt;chr&gt; "AquaDelight Inc and Son's", "BaringoAmerica Marine Ges.m.b…
+$ shpcountry &lt;chr&gt; "Polarinda", "Merigrad", "Oceanus", "Puerto del Mar", "Ocea…
+$ rcvcountry &lt;chr&gt; "Oceanus", "Oceanus", "Oceanus", "Oceanus", "Oceanus", "Uto…</code></pre>
+</div>
+</div>
+</section>
+<section id="the-new-eda" class="level2">
+<h2 class="anchored" data-anchor-id="the-new-eda">The New EDA</h2>
+<section id="time-series-graph-1" class="level3">
+<h3 class="anchored" data-anchor-id="time-series-graph-1">Time Series Graph</h3>
+<p>Here is the new time series plot on value of the goods with imputed data. Showing peaks in early 2032 and mid 2034.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure that ArrivalDate is in the right date format</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>MC2_edges_imputed<span class="sc">$</span>ArrivalDate <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(MC2_edges_imputed<span class="sc">$</span>ArrivalDate)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the monthly sum of valueofgoodsusd</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>MC2_monthly_sum <span class="ot">&lt;-</span> MC2_edges_imputed <span class="sc">%&gt;%</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Month =</span> <span class="fu">floor_date</span>(ArrivalDate, <span class="st">"month"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Month) <span class="sc">%&gt;%</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_value =</span> <span class="fu">sum</span>(valueofgoodsusd))</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a time-series plot</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(MC2_monthly_sum, <span class="fu">aes</span>(<span class="at">x =</span> Month, <span class="at">y =</span> total_value)) <span class="sc">+</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_labels =</span> <span class="st">"%Y-%m"</span>, <span class="at">date_breaks =</span> <span class="st">"1 year"</span>) <span class="sc">+</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Month and Year"</span>, <span class="at">y =</span> <span class="st">"Sum of Value of Goods in USD"</span>, <span class="at">title =</span> <span class="st">"Time-series Plot of Value of Goods"</span>) <span class="sc">+</span></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="network-graph-1" class="level3">
+<h3 class="anchored" data-anchor-id="network-graph-1">Network Graph</h3>
+<p>Below is the new network graph for the shipping and receiving countries, adding labels and shapes make the graph easier to interpret.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an edge list</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>MC2_nodes_select <span class="ot">&lt;-</span> MC2_nodes <span class="sc">%&gt;%</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(shpcountry, rcvcountry) <span class="sc">%&gt;%</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create an undirected graph from the edge list</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">graph_from_edgelist</span>(MC2_nodes_select, <span class="at">directed =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Simplify the graph to remove multiple edges between nodes</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">simplify</span>(g, <span class="at">remove.multiple =</span> <span class="cn">TRUE</span>, <span class="at">remove.loops =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate degree for each node</span></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>degree <span class="ot">&lt;-</span> <span class="fu">degree</span>(g)</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Select top N nodes with highest degree</span></span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>top_nodes <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">sort</span>(<span class="fu">degree</span>(g), <span class="at">decreasing =</span> <span class="cn">TRUE</span>))[<span class="dv">1</span><span class="sc">:</span>N]</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Create subgraph with only top nodes</span></span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>g_sub <span class="ot">&lt;-</span> <span class="fu">induced_subgraph</span>(g, top_nodes)</span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Define colors for the graph based on the community membership</span></span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>fc <span class="ot">&lt;-</span> <span class="fu">cluster_fast_greedy</span>(g_sub)</span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">rainbow</span>(<span class="fu">max</span>(<span class="fu">membership</span>(fc)))</span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g_sub)<span class="sc">$</span>color <span class="ot">&lt;-</span> colors[<span class="fu">membership</span>(fc)]</span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the subgraph</span></span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g_sub, </span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.size =</span> <span class="fu">V</span>(g_sub)<span class="sc">$</span>degree<span class="sc">/</span><span class="dv">10</span>,</span>
+<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.color =</span> <span class="fu">V</span>(g_sub)<span class="sc">$</span>color,</span>
+<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label =</span> <span class="fu">V</span>(g_sub)<span class="sc">$</span>name,  <span class="co"># add labels to the vertices</span></span>
+<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.label.cex =</span> <span class="fl">0.7</span>,  <span class="co"># adjust this value to change the label size</span></span>
+<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a>     <span class="at">vertex.frame.color =</span> <span class="cn">NA</span>,</span>
+<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a>     <span class="at">edge.arrow.size =</span> <span class="fl">0.5</span>,</span>
+<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Network Graph of Top"</span>, N, <span class="st">"Shipping and Receiving Countries"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="scatterplot" class="level3">
+<h3 class="anchored" data-anchor-id="scatterplot"><strong>Scatterplot</strong></h3>
+<p>Below is a scatter plot of ‘valueofgoodsusd’ vs ‘weightkg’ with Log transformation, with it follows on a broad arising line, with a condensed at the middle of the plot, meaning a common frequency of the weight and value of the goods. The outliers to the line, for instance the right bottom corner, might tells an anomaly to the fishing activity</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Randomly sample a subset of the data</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>subset_data <span class="ot">&lt;-</span> MC2_edges_imputed <span class="sc">%&gt;%</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sample_frac</span>(<span class="fl">0.1</span>)  <span class="co"># adjust this value as needed</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate scatterplot with log transformation</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(subset_data, <span class="fu">aes</span>(<span class="at">x =</span> weightkg, <span class="at">y =</span> valueofgoodsusd)) <span class="sc">+</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hex</span>(<span class="at">bins =</span> <span class="dv">50</span>) <span class="sc">+</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Weight (kg) [Log Scale]"</span>, <span class="at">y =</span> <span class="st">"Value of Goods (USD) [Log Scale]"</span>, </span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Hexbin Plot of Weight vs Value of Goods (Log Scale)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="histogram" class="level3">
+<h3 class="anchored" data-anchor-id="histogram"><strong>Histogram</strong></h3>
+<p>the number of transactions that took place each year, with no distinct high or lows, meaning a rather smooth change over the years, but a slight decreasing trend might be telling a different story.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(MC2_edges_imputed, <span class="fu">aes</span>(<span class="at">x =</span> Year)) <span class="sc">+</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">fill =</span> <span class="st">'blue'</span>, <span class="at">color =</span> <span class="st">'black'</span>, <span class="at">binwidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="boxplot" class="level3">
+<h3 class="anchored" data-anchor-id="boxplot"><strong>Boxplot</strong></h3>
+<p>Below is the ‘volumeteu’ per year on a boxplot, with all of the plots shaping into a line, meaning the outliers thrives each single year, which tells the story of the big dealers or anomolies on the trails.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>MC2_edges_imputed <span class="sc">%&gt;%</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(Year), <span class="at">y =</span> volumeteu)) <span class="sc">+</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Boxplot of Volume (TEU) per Year"</span>,</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span>,</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Volume (TEU)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="scatterplot-2" class="level3">
+<h3 class="anchored" data-anchor-id="scatterplot-2">Scatterplot 2</h3>
+<p>Below is the volumeteu vs weightkg colored by Year, with yellow scattered mostly at the left and green mostly too the right, meaning as time passes, the weight and volume tends to decrease, and the lines meaning a distinct product type as the weight and volume comparison is quite fixed with certain goods.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>MC2_edges_imputed <span class="sc">%&gt;%</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">log1p</span>(volumeteu), <span class="at">y =</span> <span class="fu">log1p</span>(weightkg), <span class="at">color =</span> <span class="fu">factor</span>(Year))) <span class="sc">+</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="at">palette=</span><span class="st">"Dark2"</span>) <span class="sc">+</span> <span class="co"># changing color palette</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">name =</span> <span class="st">"Log Volume (TEU + 1)"</span>) <span class="sc">+</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> <span class="st">"Log Weight (kg + 1)"</span>) <span class="sc">+</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">"Year"</span>, <span class="at">title =</span> <span class="st">"Log Weight vs Log Volume colored by Year"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>In respond to the question “Evaluate the sets of predicted knowledge graph links FishEye has provided using visual analytics. Which sets are most reliable for completing the graph?”</p>
+<p>Based on our extensive visual analysis of the dataset provided by FishEye, there are several notable conclusions we can draw regarding the reliability of the predicted knowledge graph links.</p>
+<p>Through various types of visualization including scatterplots, time-series plots, histograms, and network graphs, we have managed to unearth interesting patterns and trends in the data that can aid in the evaluation of the sets of predicted knowledge graph links.</p>
+<p>The time-series plots clearly show temporal trends and patterns in the goods shipment data, providing us with insights into the frequency and volume of trade between companies over the years. Scatterplots, particularly when variables are transformed via logarithmic scaling, allow us to detect strong relationships between variables like weight and volume of goods, which can indicate the nature and perhaps reliability of the links.</p>
+<p>Network graphs reveal the relationships between shipping and receiving countries, and when combined with community detection methods, can help identify clusters or communities within the graph. This can indicate the reliability of the links as strong clusters might suggest well-established and therefore reliable trade links.</p>
+<p>Histograms and boxplots provide insights into the distribution of various continuous variables, which can indirectly affect the reliability of the links. For example, links associated with unusually high or low volumes of goods might be less reliable than those within the normal range.</p>
+<p>While all of these visualizations provide valuable insights, it’s important to interpret them together and in the context of our knowledge about the data and its domain. The “most reliable” sets for completing the graph would ideally be those that are consistently supported across multiple visualizations and align with our existing knowledge about the trade network.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
