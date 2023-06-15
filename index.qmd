@@ -6,9 +6,9 @@ Welcome to the homepage for ISSS608 Visual Analytics and Applications! This cour
 
 On this website, you will find all the coursework for the course, including lecture notes, assignments, and resources. We've also included some highlights of the course to give you a better idea of what you can expect to learn:
 
-- Develop skills in data analysis and visualization
-- Learn to use cutting-edge tools and techniques to create compelling visualizations
-- Build a portfolio of visualizations to showcase your work to potential employers or collaborators
+-   Develop skills in data analysis and visualization
+-   Learn to use cutting-edge tools and techniques to create compelling visualizations
+-   Build a portfolio of visualizations to showcase your work to potential employers or collaborators
 
 We've also included some of our best work from the course in the portfolio section. Feel free to take a look and get inspired!
 

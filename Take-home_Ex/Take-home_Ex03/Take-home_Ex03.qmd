@@ -183,13 +183,13 @@ token_nodes %>%
       title = "Count of unique words found in product_services field")
 ```
 
-The bar chart reveals that the unique words contains some words that may not be useful to use. For instance \"a\" and \"to\". In the word of text mining we call those words **stop words**. You want to remove these words from your analysis as they are fillers used to compose a sentence.
+The bar chart reveals that the unique words contains some words that may not be useful to use. For instance "a" and "to". In the word of text mining we call those words **stop words**. You want to remove these words from your analysis as they are fillers used to compose a sentence.
 
 ### **Removing stopwords**
 
 Lucky for use, the tidytext package has a function called [`stop_words`](https://juliasilge.github.io/tidytext/reference/stop_words.html) that will help us clean up stop words.
 
-Let\'s give this a try next!
+Let's give this a try next!
 
 ```{r}
 stopwords_removed <- token_nodes %>% 

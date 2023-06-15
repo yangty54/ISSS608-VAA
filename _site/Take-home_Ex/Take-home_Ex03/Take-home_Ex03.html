@@ -184,11 +184,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-in-class-exercise">    
         <li>
-    <a class="dropdown-item" href="../../In-class_Ex/In-Class_Ex01/In-class_Ex01.html">
+    <a class="dropdown-item" href="../../In-class_Ex/In-Class_Ex01/In-Class_Ex01.html">
  <span class="dropdown-text">In-Class Exercise 1</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../In-class_Ex/In-Class_Ex03/In-class_Ex03.html">
+    <a class="dropdown-item" href="../../In-class_Ex/In-Class_Ex03/In-Class_Ex03.html">
  <span class="dropdown-text">In-Class Exercise 3</span></a>
   </li>  
         <li>
@@ -799,12 +799,12 @@ $ product_services &lt;chr&gt; "Automobiles", "Passenger cars, trucks, vans, and
 <p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>The bar chart reveals that the unique words contains some words that may not be useful to use. For instance "a" and "to". In the word of text mining we call those words <strong>stop words</strong>. You want to remove these words from your analysis as they are fillers used to compose a sentence.</p>
+<p>The bar chart reveals that the unique words contains some words that may not be useful to use. For instance “a” and “to”. In the word of text mining we call those words <strong>stop words</strong>. You want to remove these words from your analysis as they are fillers used to compose a sentence.</p>
 </section>
 <section id="removing-stopwords" class="level3">
 <h3 class="anchored" data-anchor-id="removing-stopwords"><strong>Removing stopwords</strong></h3>
 <p>Lucky for use, the tidytext package has a function called <a href="https://juliasilge.github.io/tidytext/reference/stop_words.html"><code>stop_words</code></a> that will help us clean up stop words.</p>
-<p>Let's give this a try next!</p>
+<p>Let’s give this a try next!</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>stopwords_removed <span class="ot">&lt;-</span> token_nodes <span class="sc">%&gt;%</span> </span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(stop_words)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
