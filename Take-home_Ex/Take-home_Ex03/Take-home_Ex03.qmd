@@ -13,9 +13,9 @@ format: html
 The code chunk below will be used to install and load the necessary R packages to meet the data preparation, data wrangling, data analysis and visualisation needs.
 
 ```{r}
-pacman::p_load(jsonlite, tidygraph, ggraph, 
-               visNetwork, graphlayouts, ggforce, 
-               skimr, tidytext, tidyverse)
+pacman::p_load(jsonlite, tidygraph, ggraph, GGally, wordcloud, visNetwork,
+               visNetwork, graphlayouts, ggforce, igraph, ggraph,
+               skimr, tidytext, tidyverse, gganimate, gridExtra)
 ```
 
 ## **Data Import**
@@ -102,7 +102,177 @@ ggplot(data = mc3_nodes,
   geom_bar()
 ```
 
-## **Initial Network Visualisation and Analysis**
+```{r}
+# Create a subset of data with 'country' and 'type' variables, excluding 'ZH' entries
+subset_data <- mc3_nodes[mc3_nodes$country != "ZH", c("country", "type")]
+
+# Create the parallel coordinates plot with modified parameters
+parallel_plot <- ggparcoord(data = subset_data,
+                            scale = "uniminmax",
+                            alphaLines = 0.5) +
+  theme_minimal() +
+  theme(axis.title.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank()) +
+  theme(plot.background = element_blank(),
+        panel.background = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank()) +
+  ylab("Type")
+
+# Create the pie chart
+pie_chart <- ggplot(subset_data, aes(x = "", fill = type)) +
+  geom_bar(width = 1) +
+  coord_polar("y", start = 0) +
+  labs(fill = "Type") +
+  theme_minimal()
+
+# Arrange the plots side by side
+plots <- grid.arrange(parallel_plot, pie_chart, nrow = 1)
+
+# Display the plots
+print(plots)
+```
+
+\
+The analysis revealed that the majority of the entries in the dataset are classified as "Company Type," while only a few entries are categorized as "Company Contacts" and "Beneficial Owner."
+
+```{r}
+# Subset the data for each type
+type1_data <- subset(mc3_nodes, type == "Company")
+type2_data <- subset(mc3_nodes, type == "Company Contacts")
+type3_data <- subset(mc3_nodes, type == "Beneficial Owner")
+
+# Create the boxplots for each type
+boxplot1 <- ggplot(type1_data, aes(x = type, y = revenue_omu)) +
+  geom_boxplot(fill = "lightgreen", color = "green") +
+  labs(x = "Type 1", y = "Revenue") +
+  theme_minimal()
+
+boxplot2 <- ggplot(type2_data, aes(x = type, y = revenue_omu)) +
+  geom_boxplot(fill = "lightblue", color = "blue") +
+  labs(x = "Type 2", y = "Revenue") +
+  theme_minimal()
+
+boxplot3 <- ggplot(type3_data, aes(x = type, y = revenue_omu)) +
+  geom_boxplot(fill = "pink", color = "red") +
+  labs(x = "Type 3", y = "Revenue") +
+  theme_minimal()
+
+# Arrange the boxplots side by side
+grid.arrange(boxplot1, boxplot2, boxplot3, ncol = 3)
+```
+
+Further exploration of the revenue distribution across different categories revealed interesting patterns. In the "Company" category, there are numerous outliers with significantly higher revenue values, causing the box to appear compressed near the lower end of the scale. On the other hand, the "Company Contacts" category shows a single observation with a revenue value of 157,971, indicating limited variability. Lastly, the "Beneficial Owner" category exhibits a relatively larger range, with a boxplot showing revenue values ranging from 0.5e+08 to 2e+08.
+
+## **Initial Text Visualisation and Analysis**
+
+The code below generates a word cloud visualizing the frequencies of the top 20 words extracted from the 'source' and 'target' variable in the 'mc3_edges' dataset, with larger and bolder words representing higher frequencies.
+
+```{r}
+# Generate word frequencies
+source_freq <- table(mc3_edges$source)
+
+# Sort word frequencies in descending order
+sorted_source_freq <- sort(source_freq, decreasing = TRUE)
+
+# Select the top 20 words by frequency
+top_source_words <- names(sorted_source_freq)[1:20]
+top_source_freq <- sorted_source_freq[1:20]
+
+# Create word cloud with top 20 words
+wordcloud(top_source_words, freq = top_source_freq, scale = c(1.5, 0.2), random.order = FALSE, colors = brewer.pal(8, "Dark2"))
+```
+
+```{r}
+# Generate word frequencies
+target_freq <- table(mc3_edges$target)
+
+# Sort word frequencies in descending order
+sorted_target_freq <- sort(target_freq, decreasing = TRUE)
+
+# Select the top 20 words by frequency
+top_target_words <- names(sorted_target_freq)[1:20]
+top_target_freq <- sorted_target_freq[1:20]
+
+# Create word cloud with top 20 words
+wordcloud(top_target_words, freq = top_target_freq, scale = c(2, 0.4), random.order = FALSE, colors = brewer.pal(8, "Dark2"))
+```
+
+### **Text Sensing with tidytext**
+
+In this section, you will learn how to perform basic text sensing using appropriate functions of [**tidytext**](https://juliasilge.github.io/tidytext/) package.
+
+#### **Simple word count**
+
+The code chunk below calculates number of times the word *fish* appeared in the field *product_services*.
+
+```{r}
+mc3_nodes %>% 
+    mutate(n_fish = str_count(product_services, "fish")) 
+```
+
+#### **Tokenisation**
+
+The word tokenisation have different meaning in different scientific domains. In text sensing, **tokenisation** is the process of breaking up a given text into units called **tokens**. Tokens can be individual words, phrases or even whole sentences. In the process of tokenisation, some characters like punctuation marks may be discarded. The tokens usually become the input for the processes like parsing and text mining.
+
+In the code chunk below, [`unnest_token()`](https://juliasilge.github.io/tidytext/reference/unnest_tokens.html) of tidytext is used to split text in *product_services* field into words.
+
+```{r}
+token_nodes <- mc3_nodes %>%
+  unnest_tokens(word, 
+                product_services)
+```
+
+The two basic arguments to `unnest_tokens()` used here are column names. First we have the output column name that will be created as the text is unnested into it (*word*, in this case), and then the input column that the text comes from (*product_services*, in this case).
+
+Now we can visualise the words extracted by using the code chunk below.
+
+```{r}
+token_nodes %>%
+  count(word, sort = TRUE) %>%
+  top_n(15) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(x = word, y = n)) +
+  geom_col() +
+  xlab(NULL) +
+  coord_flip() +
+      labs(x = "Count",
+      y = "Unique words",
+      title = "Count of unique words found in product_services field")
+```
+
+The bar chart reveals that the unique words contains some words that may not be useful to use. For instance "a" and "to". In the word of text mining we call those words **stop words**. You want to remove these words from your analysis as they are fillers used to compose a sentence.
+
+#### **Removing stopwords**
+
+Lucky for use, the tidytext package has a function called [`stop_words`](https://juliasilge.github.io/tidytext/reference/stop_words.html) that will help us clean up stop words.
+
+Let's give this a try next!
+
+```{r}
+stopwords_removed <- token_nodes %>% 
+  anti_join(stop_words)
+```
+
+Now we can visualise the words extracted by using the code chunk below.
+
+```{r}
+stopwords_removed %>%
+  count(word, sort = TRUE) %>%
+  top_n(15) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(x = word, y = n)) +
+  geom_col() +
+  xlab(NULL) +
+  coord_flip() +
+      labs(x = "Count",
+      y = "Unique words",
+      title = "Count of unique words found in product_services field")
+```
+
+## **Initial Network Visulization on Edges**
 
 ### **Building network model with tidygraph**
 
@@ -140,74 +310,82 @@ ggraph(layout = "fr") +
   theme_graph()
 ```
 
-## **Text Sensing with tidytext**
+### Adding Features
 
-In this section, you will learn how to perform basic text sensing using appropriate functions of [**tidytext**](https://juliasilge.github.io/tidytext/) package.
-
-### **Simple word count**
-
-The code chunk below calculates number of times the word *fish* appeared in the field *product_services*.
+With the original graph not clear enough, it is good to add in color and change the layout format of the Network graph, and most importantly, increase the betweenness centrality.
 
 ```{r}
-mc3_nodes %>% 
-    mutate(n_fish = str_count(product_services, "fish")) 
+mc3_graph %>%
+  filter(betweenness_centrality >= 1000000) %>%
+ggraph(layout = "kk") +
+  geom_edge_link(aes(alpha=0.5)) +
+  geom_node_point(aes(
+    size = betweenness_centrality,
+    color = closeness_centrality, alpha = 0.5), show.legend = FALSE) +
+  scale_size_continuous(range=c(1,4)) +  # Add the plot title
+  theme_graph()
 ```
 
-### **Tokenisation**
-
-The word tokenisation have different meaning in different scientific domains. In text sensing, **tokenisation** is the process of breaking up a given text into units called **tokens**. Tokens can be individual words, phrases or even whole sentences. In the process of tokenisation, some characters like punctuation marks may be discarded. The tokens usually become the input for the processes like parsing and text mining.
-
-In the code chunk below, [`unnest_token()`](https://juliasilge.github.io/tidytext/reference/unnest_tokens.html) of tidytext is used to split text in *product_services* field into words.
+By adding shapes and colors for different variables in the graph, it shows a better visualization of how the network graphs links each entries in the dataset.
 
 ```{r}
-token_nodes <- mc3_nodes %>%
-  unnest_tokens(word, 
-                product_services)
+mc3_graph %>%
+  filter(betweenness_centrality >= 1000000) %>%
+  ggraph(layout = "kk") +
+  geom_edge_link(aes(alpha = 0.5)) +
+  geom_node_point(aes(
+    size = betweenness_centrality,
+    color = type,
+    shape = type),  # Add the shape aesthetic
+    alpha = 0.5) +
+  scale_size_continuous(range = c(1, 4)) +
+  scale_color_manual(values = c("Company Contacts" = "red", "Beneficial Owner" = "blue", "Company" = "green")) +
+  scale_shape_manual(values = c("Company Contacts" = "triangle", "Beneficial Owner" = "square", "Company" = "circle")) +  # Add the shape values
+  theme_graph()
 ```
 
-The two basic arguments to `unnest_tokens()` used here are column names. First we have the output column name that will be created as the text is unnested into it (*word*, in this case), and then the input column that the text comes from (*product_services*, in this case).
+### **Network Visulization of nodes with more than 3 edges**
 
-Now we can visualise the words extracted by using the code chunk below.
+Below network graph labels the nodes with more than 3 edges, which there is only 1, the "Wave Warriors S.A. de C.V. Express"
 
 ```{r}
-token_nodes %>%
-  count(word, sort = TRUE) %>%
-  top_n(15) %>%
-  mutate(word = reorder(word, n)) %>%
-  ggplot(aes(x = word, y = n)) +
-  geom_col() +
-  xlab(NULL) +
-  coord_flip() +
-      labs(x = "Count",
-      y = "Unique words",
-      title = "Count of unique words found in product_services field")
+mc3_graph <- tbl_graph(nodes = mc3_nodes1,
+                       edges = mc3_edges,
+                       directed = FALSE) %>%
+  mutate(betweenness_centrality = centrality_betweenness(),
+         closeness_centrality = as.factor(centrality_closeness())) %>%
+  filter(betweenness_centrality >= 1000000)
+
+         
+# Calculate the degrees of each node
+degrees <- degree(mc3_graph)
+set.seed (1234)
+
+mc3_graph %>%
+  ggraph(layout = "fr") +
+  geom_edge_link(aes(alpha = 0.5)) +
+  geom_node_point(aes(size = betweenness_centrality,
+                      color = closeness_centrality,
+                      alpha = 0.5), show.legend = FALSE) +
+  geom_node_text(aes(label = ifelse(degrees > 3, as.character(id), "")), size = 3) +  # Add node labels
+  scale_size_continuous(range = c(1, 10)) + 
+  theme_graph()
 ```
 
-The bar chart reveals that the unique words contains some words that may not be useful to use. For instance "a" and "to". In the word of text mining we call those words **stop words**. You want to remove these words from your analysis as they are fillers used to compose a sentence.
+# Conclusion and Insights
 
-### **Removing stopwords**
+Through the use of various visualizations, including parallel coordinates plots, pie charts, boxplots, word clouds, and network visualizations, a comprehensive understanding of the dataset was achieved. The process facilitated the exploration of business characteristics, patterns, and relationships, providing valuable insights for further analysis.
 
-Lucky for use, the tidytext package has a function called [`stop_words`](https://juliasilge.github.io/tidytext/reference/stop_words.html) that will help us clean up stop words.
+Insights:
 
-Let's give this a try next!
+1.  Business Type Differentiation: The analysis revealed distinct business types within the dataset, such as companies, company contacts, and beneficial owners. Each type exhibited unique characteristics, including revenue distribution, frequency of occurrence, and network connections. This differentiation provides a valuable understanding of the diverse business landscape.
 
-```{r}
-stopwords_removed <- token_nodes %>% 
-  anti_join(stop_words)
-```
+2.  Revenue Variations: The boxplots showcasing revenue distribution for each business type highlighted variations among them. Companies exhibited a wide range of revenue values, including outliers with significant revenue levels. In contrast, company contacts had a single observation with a relatively high revenue, indicating a distinct category. Beneficial owners showed a narrower range of revenue values, suggesting a more focused revenue distribution.
 
-Now we can visualise the words extracted by using the code chunk below.
+3.  Word Frequencies: The word cloud analysis unveiled frequently occurring words associated with businesses. These words can serve as indicators of common themes, activities, or characteristics prevalent among the businesses. Identifying such keywords can aid in understanding the business landscape and identifying key trends.
 
-```{r}
-stopwords_removed %>%
-  count(word, sort = TRUE) %>%
-  top_n(15) %>%
-  mutate(word = reorder(word, n)) %>%
-  ggplot(aes(x = word, y = n)) +
-  geom_col() +
-  xlab(NULL) +
-  coord_flip() +
-      labs(x = "Count",
-      y = "Unique words",
-      title = "Count of unique words found in product_services field")
-```
+4.  Business Networks: The network visualization and community detection algorithm provided insights into the interconnectedness of businesses. The presence of communities or clusters within the network indicated groups of similar businesses. Exploring these groups can unveil hidden relationships, potential collaborations, or shared characteristics among businesses.
+
+Additionally, a specific analysis was conducted on nodes with more than 2 edges, revealing interesting findings. Among the more than 20 companies identified, only one business, "Wave Warriors S.A. de C.V. Express," had more than 3 edges. This observation highlights the uniqueness and potentially influential role of this particular business within the network. Further examination of its connections and relationships can provide valuable insights into its significance and potential opportunities for collaboration or partnerships.
+
+In conclusion, the visual analytics process provided a powerful means to identify similar businesses and group them based on their most important features. The process yielded valuable insights into business differentiation, revenue variations, network relationships, and common themes. These insights can assist decision makers in understanding the business landscape, identifying potential opportunities, and making informed strategic choices.
