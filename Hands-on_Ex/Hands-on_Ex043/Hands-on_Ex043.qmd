@@ -73,14 +73,16 @@ funnel_plot(
 )
 ```
 
-    A funnel plot object with 267 points of which 0 are outliers. 
-    Plot is adjusted for overdispersion. 
+```         
+A funnel plot object with 267 points of which 0 are outliers. 
+Plot is adjusted for overdispersion. 
+```
 
 Things to learn from the code chunk above.
 
 -   `group` in this function is different from the scatterplot. Here, it defines the level of the points to be plotted i.e. Sub-district, District or City. If Cityc is chosen, there are only six data points.
 
--   By default, `data_type`argument is \"SR\".
+-   By default, `data_type`argument is "SR".
 
 -   `limit`: Plot limits, accepted values are: 95 or 99, corresponding to 95% or 99.8% quantiles of the distribution.
 
@@ -99,10 +101,12 @@ funnel_plot(
 )
 ```
 
-    A funnel plot object with 267 points of which 7 are outliers. 
-    Plot is adjusted for overdispersion. 
+```         
+A funnel plot object with 267 points of which 7 are outliers. 
+Plot is adjusted for overdispersion. 
+```
 
-Things to learn from the code chunk above. + `data_type` argument is used to change from default \"SR\" to \"PR\" (i.e. proportions). + `xrange` and `yrange` are used to set the range of x-axis and y-axis
+Things to learn from the code chunk above. + `data_type` argument is used to change from default "SR" to "PR" (i.e. proportions). + `xrange` and `yrange` are used to set the range of x-axis and y-axis
 
 ### FunnelPlotR methods: Makeover 2
 
@@ -123,8 +127,10 @@ funnel_plot(
 )
 ```
 
-    A funnel plot object with 267 points of which 7 are outliers. 
-    Plot is adjusted for overdispersion. 
+```         
+A funnel plot object with 267 points of which 7 are outliers. 
+Plot is adjusted for overdispersion. 
+```
 
 Things to learn from the code chunk above.
 
